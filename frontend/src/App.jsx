@@ -1,35 +1,81 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// frontend/src/App.jsx
+import React, { useState,useEffect } from 'react';
+import { getHealth } from './services/api';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [drugInput, setDrugInput] = useState('');
+  const [results, setResults] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [backendStatus, setBackendStatus] = useState('Checking...');
+
+  useEffect(() => {
+    getHealth()
+      .then(data => {
+        if (data.status === 'ok') {
+          setBackendStatus('Backend is healthy!');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        setBackendStatus('Backend is unreachable.');
+      });
+  }, []); // The empty array ensures this runs only once
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const handleScan = () => {
+    // We will add the API call logic here later
+    console.log('Scanning file:', selectedFile);
+  };
+  
+  const handleCheck = () => {
+    // We will add the API call logic here later
+    console.log('Checking drugs:', drugInput);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="App">
+      <header className="App-header">
+        <h1>SafeMedsAI 🌿</h1>
+       <p>Intelligent Drug Interaction Advisor</p>
+        
+        <div className="status-check">
+          <p>Connection Status: {backendStatus}</p>
+        </div>
+        
+        <div className="input-section">
+          <h2>Check by Scanning a Label</h2>
+          <input type="file" onChange={handleFileChange} />
+          <button onClick={handleScan} disabled={!selectedFile || isLoading}>
+            {isLoading ? 'Scanning...' : 'Scan Image'}
+          </button>
+        </div>
+
+        <div className="input-section">
+          <h2>Check by Manual Entry</h2>
+          <input 
+            type="text"
+            value={drugInput}
+            onChange={(e) => setDrugInput(e.target.value)}
+            placeholder="e.g., Paracetamol, Metronidazole" 
+          />
+          <button onClick={handleCheck} disabled={!drugInput || isLoading}>
+            {isLoading ? 'Checking...' : 'Check Interactions'}
+          </button>
+        </div>
+
+        {results && (
+          <div className="results-section">
+            <h2>Interaction Results</h2>
+            <pre>{JSON.stringify(results, null, 2)}</pre>
+          </div>
+        )}
+      </header>
+    </div>
+  );
 }
 
-export default App
+export default App;

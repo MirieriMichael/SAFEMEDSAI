@@ -43,3 +43,7 @@ pytest_cache/
 # === OS Files ===
 .DS_Store
 Thumbs.db
+backend/.env
+
+# Ignore large datasets
+backend/data/
