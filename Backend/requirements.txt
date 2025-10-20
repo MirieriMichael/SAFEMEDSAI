@@ -13,3 +13,4 @@ Pillow
 rapidfuzz==3.9.3
 
 requests
+opencv-python-headless

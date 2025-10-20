@@ -47,3 +47,18 @@ backend/.env
 
 # Ignore large datasets
 backend/data/
+# --- OCR Test Files ---
+
+# Ignore specific test images by name
+backend/Bru.jpg
+backend/asip.jpg
+backend/orange.jpg
+backend/ibb.jpg
+
+# Ignore any generated diagnostic images from our tests
+backend/preprocessed_image.png
+backend/deskewed_and_processed.png
+backend/final_production_image.png
+backend/final_grayscale_image.png
+backend/test_image_normal.png
+backend/test_image_inverted.png
