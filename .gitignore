@@ -1,64 +1,19 @@
-# ======================
-# SafeMedsAI .gitignore
-# ======================
-
-# === Python (Django) ===
+﻿# Python / venv
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-*.sqlite3
-db.sqlite3
-.env
+Backend/venv/
 .venv/
-env/
-*.log
+venv/
 
-# === Node.js (React) ===
+# Node / frontend
 node_modules/
+frontend/node_modules/
 dist/
+frontend/dist/
 build/
-.npm/
-.npmrc
+
+# Misc
 *.log
 .env
-.env.*
-
-# === Docker ===
-*.pid
-*.seed
-*.pid.lock
-
-# === Testing / Coverage ===
-.coverage
-htmlcov/
-.tox/
-pytest_cache/
-
-# === Editor / IDE ===
-.vscode/
-.idea/
-*.swp
-
-# === OS Files ===
 .DS_Store
 Thumbs.db
-backend/.env
-
-# Ignore large datasets
-backend/data/
-# --- OCR Test Files ---
-
-# Ignore specific test images by name
-backend/Bru.jpg
-backend/asip.jpg
-backend/orange.jpg
-backend/ibb.jpg
-
-# Ignore any generated diagnostic images from our tests
-backend/preprocessed_image.png
-backend/deskewed_and_processed.png
-backend/final_production_image.png
-backend/final_grayscale_image.png
-backend/test_image_normal.png
-backend/test_image_inverted.png
