@@ -1,0 +1,32 @@
+@'
+* text=auto
+
+# Force LF for code
+*.py   text eol=lf
+*.js   text eol=lf
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.jsx  text eol=lf
+*.json text eol=lf
+*.css  text eol=lf
+*.html text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.sh   text eol=lf
+*.md   text eol=lf
+
+# Windows scripts
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+
+# Binaries
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.pdf  binary
+*.ico  binary
+*.ttf  binary
+*.woff binary
+*.woff2 binary
+'@ | Set-Content .gitattributes -NoNewline
