@@ -1,7 +1,6 @@
-@'
 * text=auto
 
-# Force LF for code
+# Source files (force LF)
 *.py   text eol=lf
 *.js   text eol=lf
 *.ts   text eol=lf
@@ -19,7 +18,7 @@
 *.bat  text eol=crlf
 *.cmd  text eol=crlf
 
-# Binaries
+# Binaries (no EOL normalization)
 *.png  binary
 *.jpg  binary
 *.jpeg binary
@@ -29,4 +28,3 @@
 *.ttf  binary
 *.woff binary
 *.woff2 binary
-'@ | Set-Content .gitattributes -NoNewline
