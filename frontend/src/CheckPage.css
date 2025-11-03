@@ -1,0 +1,243 @@
+/* frontend/src/CheckPage.css */
+
+/* This is the wrapper for the CheckPage to add padding */
+.checkpage-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+/* --- Input Section --- */
+.hero-section {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #263238;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  margin-bottom: 40px;
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.hero-section .subtitle {
+  font-size: 1.125rem;
+  color: #9ca3af;
+  max-width: 600px;
+  margin: 16px auto 32px;
+}
+
+.input-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.input-section {
+  background-color: #1a262d;
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid #475569;
+}
+
+.input-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 16px;
+}
+
+.input-section input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #475569;
+  background-color: #263238;
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 16px;
+}
+
+/* --- FIX FOR WACKY BUTTONS --- */
+/* Add some spacing so they don't look jumbled */
+.input-section .upload-button {
+  margin-right: 10px;
+}
+.input-section .clear-button {
+  margin-left: 10px;
+}
+
+
+/* --- Results Section --- */
+.results-section {
+  width: 100%;
+}
+
+.results-section h2 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.results-section .summary-text {
+  font-size: 1.125rem;
+  color: #9ca3af;
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 40px auto;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.interactions-column h3,
+.details-column h3,
+.severity-legend h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 16px;
+}
+
+/* --- Severity Legend --- */
+.severity-legend {
+  margin-bottom: 40px;
+}
+.severity-legend-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.severity-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #263238;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #475569;
+}
+.severity-legend-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Material Symbols Outlined';
+  font-size: 20px;
+}
+.severity-legend-item h4 { font-weight: 600; color: #fff; }
+.severity-legend-item p { font-size: 0.85rem; color: #9ca3af; }
+.severity-legend-icon.major { background-color: #ef4444; color: #fff; }
+.severity-legend-icon.moderate { background-color: #f59e0b; color: #fff; }
+.severity-legend-icon.minor { background-color: #22c55e; color: #fff; }
+
+
+/* --- Card Base Style --- */
+.card {
+  background-color: #263238;
+  border-radius: 8px;
+  border: 1px solid #475569;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.card h4 { font-size: 1.25rem; font-weight: 600; color: #fff; }
+.card p { font-size: 0.9rem; color: #cbd5e1; margin-top: 8px; }
+
+/* --- Card Variations --- */
+.card.info {
+  border-left: 5px solid #3b82f6;
+}
+.card.info p { font-size: 1rem; font-weight: 500; color: #fff; }
+
+.card.major { border-left: 5px solid #ef4444; }
+.card.major p strong { color: #f87171; }
+.card.moderate { border-left: 5px solid #f59e0b; }
+.card.moderate p strong { color: #fbbf24; }
+.card.minor { border-left: 5px solid #22c55e; }
+.card.minor p strong { color: #4ade80; }
+.card.unknown { border-left: 5px solid #6b7280; }
+.card.unknown p strong { color: #9ca3af; }
+
+/* --- FIX FOR ADMINISTRATION --- */
+/* These styles define your CollapsibleCard */
+.collapsible-card-static {
+  font-size: 0.9rem;
+  color: #9ca3af;
+  margin-top: 16px;
+  padding-top: 10px;
+  border-top: 1px solid #475569;
+}
+.collapsible-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px 0;
+  border-top: 1px solid #475569;
+  margin-top: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+}
+.collapsible-header:first-child {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 16px;
+}
+.collapsible-header span {
+  font-weight: 600;
+  color: #cbd5e1;
+  font-size: 1rem;
+}
+.collapsible-header .collapsible-icon {
+  font-size: 1.5rem;
+  color: #9ca3af;
+  transition: transform 0.3s ease;
+}
+.collapsible-header:hover .collapsible-icon {
+  color: #fff;
+}
+
+.collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  color: #9ca3af;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.collapsible-content p {
+  padding-bottom: 10px;
+}
+.collapsible-header.open + .collapsible-content {
+  max-height: 500px;
+  padding-top: 5px;
+}
+/* --- END OF COLLAPSIBLE CARD FIX --- */
+
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .input-container,
+  .results-grid,
+  .severity-legend-grid {
+    grid-template-columns: 1fr;
+  }
+}
