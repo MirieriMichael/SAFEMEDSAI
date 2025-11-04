@@ -1,8 +1,7 @@
-﻿# ======================
+﻿@'
 # SafeMedsAI .gitignore
-# ======================
 
-# === Python (Django) ===
+# Python (Django)
 __pycache__/
 *.pyc
 *.pyo
@@ -12,10 +11,10 @@ db.sqlite3
 .env
 .venv/
 env/
-Backend/venv/ # Correct Casing
+Backend/venv/
 *.log
 
-# === Node.js (React) ===
+# Node.js (React)
 node_modules/
 frontend/node_modules/
 dist/
@@ -26,32 +25,26 @@ build/
 .env
 .env.*
 
-# === OS Files ===
+# OS files
 .DS_Store
 Thumbs.db
-Backend/.env # Correct Casing
+Backend/.env
 
-# ================================
-# THIS IS THE MOST IMPORTANT PART
-# ================================
+# Large datasets / DB
+Backend/data/
+Backend/db.sqlite3
 
-# Ignore large datasets
-Backend/data/ # Correct Casing
-
-# Ignore the local database
-Backend/db.sqlite3 # Correct Casing
-
-# --- OCR Test Files ---
-# Ignore specific test images by name
+# OCR Test Files
 Backend/Bru.jpg
 Backend/asip.jpg
 Backend/orange.jpg
 Backend/ibb.jpg
 
-# Ignore any generated diagnostic images from our tests
+# Generated diagnostic images
 Backend/preprocessed_image.png
 Backend/deskewed_and_processed.png
 Backend/final_production_image.png
 Backend/final_grayscale_image.png
 Backend/test_image_normal.png
 Backend/test_image_inverted.png
+'@ | Set-Content .gitignore -Encoding UTF8
