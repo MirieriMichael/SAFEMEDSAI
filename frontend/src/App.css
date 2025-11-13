@@ -12,6 +12,9 @@
 }
 
 /* --- MAIN LAYOUT --- */
+
+/* Keep .app-nav sticky but raise its stacking context so it captures clicks
+   above modals/backdrops that might otherwise intercept pointer events. */
 .app-nav {
   display: flex;
   justify-content: space-between;
@@ -21,8 +24,19 @@
   border-bottom: 1px solid #334155;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 1100;          /* raised from 10 to sit above modal backdrops */
+  pointer-events: auto;   /* ensure nav receives clicks */
 }
+
+/* For projects that use a .navbar class instead of .app-nav, keep parity */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  pointer-events: auto;
+}
+
+/* Logo and links */
 .nav-logo {
   font-size: 1.5rem;
   font-weight: 700;
@@ -119,3 +133,93 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* --- NAVBAR USERNAME / PROFILE LINK --- */
+/* Your existing styles preserved, plus stronger stacking & pointer settings. */
+.navbar-username {
+  margin-right: 15px;
+  text-decoration: none;
+  color: #e0e0e0;
+  font-weight: bold;
+  cursor: pointer; /* Force the hand cursor */
+  position: relative; /* Ensure it has a stacking context */
+  z-index: 1110; /* Slightly higher than .app-nav so it sits on top */
+  pointer-events: auto; /* Ensure it captures clicks */
+}
+
+/* Hover state */
+.navbar-username:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* Small utility: ensure any button or link inside navbar gets pointer events */
+.navbar .navbar-button,
+.app-nav .navbar-button,
+.navbar a,
+.app-nav a {
+  pointer-events: auto;
+}
+
+/* --- MODAL BACKDROP (if you use WelcomeModal or similar) --- */
+/* Make modal backdrop lower than navbar so nav links remain clickable. */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* intentionally lower than .app-nav (1100) */
+  background: rgba(0,0,0,0.5);
+}
+.modal-content {
+  z-index: 1001; /* above backdrop but below navbar */
+  background: #0b1113;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 900px;
+  width: 90%;
+}
+
+/* --- SMALL LAYOUT/ACCESSIBILITY TWEAKS --- */
+a { color: inherit; } /* avoid unexpected link colors */
+a:focus { outline: 2px solid #1193d4; outline-offset: 2px; }
+
+/* Keep everything responsive — only layout rules, no breaking changes */
+@media (max-width: 768px) {
+  .nav-links { gap: 12px; }
+  .app-nav { padding: 12px 20px; }
+  .navbar-username { margin-right: 8px; font-size: 0.95rem; }
+}
+/* ---------- DEBUG / TEMP (paste at bottom; remove after debugging) ---------- */
+/* Show elements that are fullscreen and possibly blocking clicks */
+[data-debug-overlay] {
+  outline: 3px dashed rgba(255, 0, 0, 0.9);
+  background: rgba(255,0,0,0.02);
+  pointer-events: none; /* visual only */
+  z-index: 2000 !important;
+}
+
+/* Mark elements that explicitly disable pointer events */
+* {
+  /* show a faint yellow outline on elements that have pointer-events: none */
+}
+*[style*="pointer-events: none"], .blocking-overlay {
+  outline: 2px dashed rgba(255, 200, 0, 0.9);
+}
+
+/* For modal/backdrop detection: highlight any fixed or absolute full-screen elements */
+:where(*[style*="position:fixed"], *[style*="position:absolute"]) {
+  /* only highlight very large ones to reduce noise */
+}
+@media (min-width:0px) {
+  /* find elements that occupy most of viewport (heuristic) */
+  /* This is visual-only — remove after debugging */
+  .modal-backdrop, .modal, .overlay, .backdrop, [role="dialog"] {
+    outline: 2px dashed rgba(0, 170, 255, 0.9);
+    box-shadow: 0 0 0 3px rgba(0,170,255,0.04);
+  }
+}
+
+/* show focus for links so we can tab to them during debug */
+.navbar-username:focus { outline: 3px solid #ffdb4d; outline-offset: 2px; }
