@@ -1,6 +1,8 @@
 # backend/drugs/serializers.py
 from rest_framework import serializers
-from .models import Drug, Interaction, DrugInfo # Import DrugInfo
+# --- ADD THIS: Import DrugInfo and ScanHistory ---
+from .models import Drug, Interaction, DrugInfo, ScanHistory,Profile
+# --- END ADD ---
 
 # NEW serializer for our detailed info model
 class DrugInfoSerializer(serializers.ModelSerializer):
@@ -10,13 +12,12 @@ class DrugInfoSerializer(serializers.ModelSerializer):
 
 class DrugSerializer(serializers.ModelSerializer):
     """UPDATED to include the nested DrugInfo."""
-    # This line tells the serializer to look for the related DrugInfo object
-    # and use the DrugInfoSerializer to format it.
     druginfo = DrugInfoSerializer(read_only=True)
 
     class Meta:
         model = Drug
-        fields = ['name', 'druginfo'] # Add 'druginfo' to the fields
+        # Using the fields from your model + the new druginfo
+        fields = ['id', 'name', 'rxcui', 'is_brand', 'druginfo']
 
 class InteractionSerializer(serializers.ModelSerializer):
     """This serializer remains the same, but will now show more detail
@@ -27,3 +28,42 @@ class InteractionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interaction
         fields = ['drug_a', 'drug_b', 'description', 'severity']
+
+# ... (DrugInfoSerializer, DrugSerializer, InteractionSerializer remain unchanged) ...
+
+class ScanHistorySerializer(serializers.ModelSerializer):
+    """
+    Serializes the ScanHistory model.
+    """
+    class Meta:
+        model = ScanHistory
+        # --- THIS IS THE FIX ---
+        # I added 'scan_results' to this list. 
+        # Before, it was missing, so the frontend got nothing.
+        fields = ['id', 'created_at', 'drug_names', 'scan_results'] 
+        # --- END FIX ---
+# backend/drugs/serializers.py
+# ... (existing serializers)
+
+# backend/drugs/serializers.py
+
+# ... imports ...
+from .models import Profile, Notification # Import Notification
+
+class ProfileSerializer(serializers.ModelSerializer):
+    # We add 'avatar_url' to help the frontend display it easily
+    avatar_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Profile
+        fields = ['allergies', 'conditions', 'phone_number', 'birth_date', 'avatar', 'avatar_url']
+
+    def get_avatar_url(self, obj):
+        if obj.avatar:
+            return obj.avatar.url
+        return None
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['id', 'title', 'message', 'is_read', 'created_at', 'type']
