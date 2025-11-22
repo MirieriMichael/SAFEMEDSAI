@@ -229,14 +229,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # backend/core/settings.py
 
 # ... (bottom of file) ...
-# backend/core/settings.py
 
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # <-- Comment this out!
-
-# Use Gmail
+# --- REAL EMAIL CONFIGURATION (GMAIL) ---
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'fromsafemedsai@gmail.com' # Your email from previous message
-EMAIL_HOST_PASSWORD = 'ezkgfhlbiuirxxps' # Your App Password (NO spaces!)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = 'SafeMedsAI <noreply@safemedsai.com>'

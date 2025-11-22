@@ -216,22 +216,64 @@
 }
 
 .collapsible-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-out;
-  color: #9ca3af;
-  font-size: 0.85rem;
+  color: #e5e7eb;
+  font-size: 0.9rem;
   line-height: 1.5;
+  padding: 10px 0;
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+.collapsible-content.open {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  max-height: none;
+  overflow: visible;
 }
 .collapsible-content p {
+  color: #e5e7eb;
   padding-bottom: 10px;
-}
-.collapsible-header.open + .collapsible-content {
-  max-height: 500px;
-  padding-top: 5px;
+  margin: 5px 0;
 }
 /* --- END OF COLLAPSIBLE CARD FIX --- */
 
+
+/* --- Safety Badge Styles --- */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-danger {
+  background-color: #ef4444;
+  color: #fff;
+}
+
+.badge-warning {
+  background-color: #f59e0b;
+  color: #fff;
+}
+
+.badge-info {
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+.badge-success {
+  background-color: #22c55e;
+  color: #fff;
+}
+
+.badge-default {
+  background-color: #6b7280;
+  color: #fff;
+}
 
 /* --- Responsive --- */
 @media (max-width: 768px) {

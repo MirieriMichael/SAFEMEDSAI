@@ -79,7 +79,7 @@ export default function HelpPage() {
           <div className="contact-card">
             <h2>Still Confused?</h2>
             <p>Our support team is ready to assist you with any issues.</p>
-            <a href="mailto:support@safemedsai.com" className="contact-button">
+            <a href="mailto:fromsafemedsai@gmail.com" className="contact-button">
               <span className="material-symbols-outlined">mail</span>
               Contact Support
             </a>

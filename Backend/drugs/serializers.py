@@ -1,7 +1,7 @@
 # backend/drugs/serializers.py
 from rest_framework import serializers
 # --- ADD THIS: Import DrugInfo and ScanHistory ---
-from .models import Drug, Interaction, DrugInfo, ScanHistory,Profile
+from .models import Drug, Interaction, DrugInfo, ScanHistory,Profile, Notification
 # --- END ADD ---
 
 # NEW serializer for our detailed info model
@@ -48,7 +48,6 @@ class ScanHistorySerializer(serializers.ModelSerializer):
 # backend/drugs/serializers.py
 
 # ... imports ...
-from .models import Profile, Notification # Import Notification
 
 class ProfileSerializer(serializers.ModelSerializer):
     # We add 'avatar_url' to help the frontend display it easily

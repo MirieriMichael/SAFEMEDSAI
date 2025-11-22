@@ -191,6 +191,10 @@ import SignupPage from './SignupPage';
 import ProfilePage from './ProfilePage';
 import { useAuth } from './context/AuthContext';
 import HelpPage from './HelpPage';
+import VerifyEmailPage from './VerifyEmailPage';
+import Verify2FAPage from './Verify2FAPage';
+import RequestResetPage from './RequestResetPage'; // <-- Add
+import ResetPasswordPage from './ResetPasswordPage';
 
 function App() {
   // Must be inside a Router (BrowserRouter typically in index.jsx)
@@ -251,6 +255,10 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/verify-2fa" element={<Verify2FAPage />} />
+          <Route path="/request-reset-password" element={<RequestResetPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
         </Routes>
       </main>
 

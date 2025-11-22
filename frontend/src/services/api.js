@@ -55,14 +55,21 @@ const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
 
 // --- NEW: Helper function to get auth headers ---
 // This reads the token that AuthContext saved to localStorage.
+// Inside frontend/src/services/api.js
+
 const getAuthHeaders = () => {
-  const token = localStorage.getItem('authToken');
+  // MUST MATCH the key used in AuthContext ('authToken')
+  const token = localStorage.getItem('authToken'); 
+  
   const headers = {
-    'Content-Type': 'application/json', // Default content type
+    'Content-Type': 'application/json',
   };
+  
   if (token) {
+    // Django REST Framework expects "Token <key_string>"
     headers['Authorization'] = `Token ${token}`;
   }
+  
   return headers;
 };
 // --- END NEW ---
@@ -206,14 +213,14 @@ export async function updateUserProfile(data) {
   const isFormData = data instanceof FormData;
   const headers = getAuthHeaders();
   
-  // If sending a file (FormData), delete Content-Type so browser sets the boundary
+  // CRITICAL: Delete Content-Type for FormData so browser sets boundary
   if (isFormData) {
     delete headers['Content-Type'];
   }
 
   const res = await fetch(`${API_BASE}/api/drugs/auth/profile/`, {
     method: 'PUT',
-    headers: headers,
+    headers: headers, 
     body: isFormData ? data : JSON.stringify(data),
   });
   
@@ -276,4 +283,94 @@ export async function resendVerificationEmail(email) {
   }
   
   return res.json();
+}
+// frontend/src/services/api.js
+
+// ... existing functions ...
+
+export async function setup2FA() {
+  const res = await fetch(`${API_BASE}/api/drugs/auth/2fa/setup/`, {
+    method: 'GET',
+    headers: getAuthHeaders(),
+  });
+  if (!res.ok) throw new Error('Failed to setup 2FA');
+  return res.json(); // Returns { qr_code: "data:image..." }
+}
+
+export async function verify2FA(code) {
+  const res = await fetch(`${API_BASE}/api/drugs/auth/2fa/verify/`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ code }),
+  });
+  if (!res.ok) throw new Error('Invalid code');
+  return res.json();
+}
+
+export async function disable2FA() {
+  const res = await fetch(`${API_BASE}/api/drugs/auth/2fa/disable/`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+  });
+  if (!res.ok) throw new Error('Failed to disable 2FA');
+  return res.json();
+}
+// ... inside frontend/src/services/api.js
+
+// ADD THIS NEW FUNCTION
+export async function sendEmailOTP() {
+  const res = await fetch(`${API_BASE}/api/drugs/auth/2fa/email/`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+  });
+  if (!res.ok) throw new Error('Failed to send email code');
+  return res.json();
+}
+
+// ... (Keep setup2FA, verify2FA, disable2FA as they are)
+// frontend/src/services/api.js
+// ... (at the end of the file)
+
+export async function changePassword(oldPassword, newPassword, confirmNewPassword) {
+  const res = await fetch(`${API_BASE}/api/drugs/auth/change-password/`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({
+      old_password: oldPassword,
+      new_password: newPassword,
+      confirm_new_password: confirmNewPassword
+    }),
+  });
+  
+  const data = await res.json();
+  if (!res.ok) {
+    // Pass the specific error from the backend (e.g., "Incorrect old password")
+    throw new Error(data.error || "Failed to change password.");
+  }
+  return data;
+}
+// frontend/src/services/api.js
+// ... (at the end of the file)
+
+export async function requestPasswordReset(email) {
+  const res = await fetch(`${API_BASE}/api/drugs/auth/password-reset-request/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+  return res.json();
+}
+
+export async function confirmPasswordReset(uidb64, token, new_password) {
+  const res = await fetch(`${API_BASE}/api/drugs/auth/password-reset-confirm/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ uidb64, token, new_password }),
+  });
+  
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || "Failed to reset password.");
+  }
+  return data;
 }

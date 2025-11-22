@@ -122,7 +122,7 @@ from django.db.models import Q
 from itertools import combinations
 import logging
 from django.contrib.auth.models import User
-
+from django.utils import timezone # <-- Make sure this is imported
 # Set up logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(asctime)s:%(message)s")
 logger = logging.getLogger(__name__)
@@ -248,27 +248,40 @@ class ScanHistory(models.Model):
 
 # ... (keep all your other imports: User, models, etc.)
 
+
+
+# ... (Drug, DrugInfo, Interaction, LocalBrand models) ...
+
+
+# --- REPLACE YOUR EXISTING PROFILE CLASS WITH THIS ---
 class Profile(models.Model):
     """
-    Extension of the User model to store medical details like allergies.
+    Extension of the User model to store all custom user data.
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     
-    # Your existing fields
-    allergies = models.JSONField(default=list, blank=True) 
+    # --- Your Medical & Personal Fields ---
+    allergies = models.JSONField(default=list, blank=True)
     conditions = models.JSONField(default=list, blank=True)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     
-    # --- THIS IS THE FIX ---
-    # Add the new fields for email verification
+    # --- Your Email Verification Fields ---
     email_verified = models.BooleanField(default=False)
     verification_token = models.CharField(max_length=100, null=True, blank=True)
-    # --- END OF FIX ---
+
+    # --- My 2FA Fields (Added) ---
+    is_2fa_enabled = models.BooleanField(default=False)
+    otp_code = models.CharField(max_length=6, null=True, blank=True)
+    otp_created_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Profile for {self.user.username}"
+# --- END OF REPLACEMENT ---
+
+
+# ... (rest of your models.py: ScanHistory, Notification, etc.) ...
 
 # ... (keep all your other models: Drug, DrugInfo, Interaction, etc.) ...
 

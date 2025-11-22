@@ -1,5 +1,7 @@
 # backend/drugs/urls.py
 from django.urls import path
+from .views import Login2FAView
+from .views import SendEmailOTPView
 from .views import (
     ScanAndCheckView, 
     SignupView, 
@@ -11,7 +13,10 @@ from .views import (
     Verify2FAView,
     Disable2FAView,
     VerifyEmailView,       
-    ResendVerificationView # <-- Ensure this is imported
+    ResendVerificationView,# <-- Ensure this is imported
+    ChangePasswordView,
+    PasswordResetRequestView,
+    PasswordResetConfirmView
 )
 
 urlpatterns = [
@@ -37,4 +42,10 @@ urlpatterns = [
     
     # --- THIS WAS MISSING/BROKEN ---
     path('auth/resend-verification/', ResendVerificationView.as_view(), name='resend_verification'),
+    path('auth/2fa/login/', Login2FAView.as_view(), name='login_2fa'),
+    path('auth/2fa/email/', SendEmailOTPView.as_view(), name='send_2fa_email'),
+    path('auth/change-password/', ChangePasswordView.as_view(), name='change_password'),
+    path('auth/password-reset-request/', PasswordResetRequestView.as_view(), name='password_reset_request'),
+    path('auth/password-reset-confirm/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+
 ]
