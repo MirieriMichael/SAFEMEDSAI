@@ -1724,7 +1724,7 @@ class ScanAndCheckView(APIView):
         unique_drug_objects = list({obj.id: obj for obj in all_drug_objects_in_db}.values())
         serialized_drug_details = DrugSerializer(unique_drug_objects, many=True).data
         
-        # 2a. Add patient safety checks for each drug (if user is authenticated)
+        # 2a. Add patient safety checks and alerts for each drug (if user is authenticated)
         if user and user.is_authenticated:
             for i, drug_detail in enumerate(serialized_drug_details):
                 # Get the corresponding drug object
@@ -1738,6 +1738,34 @@ class ScanAndCheckView(APIView):
                     # Fallback: use dict format
                     safety_check = check_patient_safety(drug_detail, user)
                     drug_detail['safety_check'] = safety_check
+                
+                # Generate user-friendly safety_alerts from safety_check
+                safety_alerts = []
+                if safety_check.get('safety_badge') != 'Safe':
+                    matched_conditions = safety_check.get('matched_conditions', [])
+                    matched_allergies = safety_check.get('matched_allergies', [])
+                    
+                    # Add alerts for conditions
+                    for condition in matched_conditions:
+                        safety_alerts.append(
+                            f"{drug_name} may be unsafe because you have: {condition}"
+                        )
+                    
+                    # Add alerts for allergies
+                    for allergy in matched_allergies:
+                        safety_alerts.append(
+                            f"{drug_name} may interact with your allergy: {allergy}"
+                        )
+                    
+                    # If we have matches but no specific alerts, use the explanation
+                    if not safety_alerts and safety_check.get('explanation'):
+                        safety_alerts.append(safety_check.get('explanation'))
+                
+                drug_detail['safety_alerts'] = safety_alerts
+        else:
+            # No user authenticated - add empty safety_alerts for all drugs
+            for drug_detail in serialized_drug_details:
+                drug_detail['safety_alerts'] = []
         
         payload["drug_details"] = serialized_drug_details
 
@@ -2231,6 +2259,98 @@ class NotificationView(APIView):
 # ... (existing imports) ...
 
 # backend/drugs/views.py
+
+class DrugDetailView(APIView):
+    """
+    Returns detailed information for a single drug, including personalized safety checks.
+    """
+    authentication_classes = [TokenAuthentication]
+    permission_classes = []  # Allow anonymous, but check auth for personalized safety checks
+    
+    def get(self, request):
+        """
+        Get drug details by name.
+        Query param: ?name=Aspirin
+        """
+        drug_name = request.query_params.get('name')
+        
+        if not drug_name:
+            return Response({"error": "Drug name is required. Use ?name=Aspirin"}, status=400)
+        
+        try:
+            # Find the drug
+            drug = Drug.objects.get(name__iexact=drug_name)
+        except Drug.DoesNotExist:
+            return Response({"error": f"Drug '{drug_name}' not found"}, status=404)
+        
+        # Serialize drug
+        serializer = DrugSerializer(drug)
+        drug_detail = serializer.data
+        
+        # Flatten druginfo to top level
+        druginfo = drug_detail.get('druginfo', {})
+        if isinstance(druginfo, dict):
+            drug_detail['administration'] = druginfo.get('administration', '') or ''
+            drug_detail['side_effects'] = druginfo.get('side_effects', '') or ''
+            drug_detail['warnings'] = druginfo.get('warnings', '') or ''
+            drug_detail['contraindications'] = druginfo.get('contraindications', '') or ''
+        else:
+            try:
+                di = drug.druginfo
+                if di:
+                    drug_detail['administration'] = di.administration or ''
+                    drug_detail['side_effects'] = di.side_effects or ''
+                    drug_detail['warnings'] = di.warnings or ''
+                    drug_detail['contraindications'] = getattr(di, 'contraindications', '') or ''
+            except Exception:
+                drug_detail['administration'] = ''
+                drug_detail['side_effects'] = ''
+                drug_detail['warnings'] = ''
+                drug_detail['contraindications'] = ''
+        
+        # Add safety check if user is authenticated
+        user = request.user if hasattr(request, 'user') and request.user.is_authenticated else None
+        
+        if user:
+            # Use existing check_patient_safety function
+            safety_check = check_patient_safety(drug, user)
+            drug_detail['safety_check'] = safety_check
+            
+            # Generate user-friendly safety_alerts
+            safety_alerts = []
+            if safety_check.get('safety_badge') != 'Safe':
+                matched_conditions = safety_check.get('matched_conditions', [])
+                matched_allergies = safety_check.get('matched_allergies', [])
+                
+                # Add alerts for conditions
+                for condition in matched_conditions:
+                    safety_alerts.append(
+                        f"{drug_name} may be unsafe because you have: {condition}"
+                    )
+                
+                # Add alerts for allergies
+                for allergy in matched_allergies:
+                    safety_alerts.append(
+                        f"{drug_name} may interact with your allergy: {allergy}"
+                    )
+                
+                # If we have matches but no specific alerts, use the explanation
+                if not safety_alerts and safety_check.get('explanation'):
+                    safety_alerts.append(safety_check.get('explanation'))
+            
+            drug_detail['safety_alerts'] = safety_alerts
+        else:
+            # No user authenticated - return safe default
+            drug_detail['safety_check'] = {
+                "safety_badge": "Safe",
+                "matched_allergies": [],
+                "matched_conditions": [],
+                "explanation": "No known risks based on your saved health conditions.",
+                "risk_level": "low"
+            }
+            drug_detail['safety_alerts'] = []
+        
+        return Response(drug_detail, status=200)
 
 # ... (all your other classes: ScanAndCheckView, SignupView, LoginView, etc.) ...
 

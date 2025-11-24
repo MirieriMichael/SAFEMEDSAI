@@ -269,7 +269,6 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { checkInteractions, analyzeImages } from './services/api';
 import CollapsibleCard from './CollapsibleCard';
-import SafetyBadge from './components/SafetyBadge';
 
 // Import libraries for PDF export
 import jsPDF from 'jspdf';
@@ -287,6 +286,29 @@ function CheckPage() {
   const fileInputRef = useRef(null);
   const resultsRef = useRef(null);
 
+  // --- Helper function to safely get drug field (defensive rendering) ---
+  const getDrugField = (detail, field) => {
+    // field = 'administration' | 'side_effects' | 'warnings'
+    if (detail?.druginfo && typeof detail.druginfo === 'object' && detail.druginfo[field]) {
+      return detail.druginfo[field];
+    }
+    if (detail && detail[field]) {
+      return detail[field];
+    }
+    // Additional fallback for nested ai_summary variants
+    if (detail?.drug_info && detail.drug_info[field]) {
+      return detail.drug_info[field];
+    }
+    return "";
+  };
+
+  // Helper to safely stringify content if it's not a string
+  const safeContent = (c) => {
+    if (typeof c === "string") return c;
+    if (c == null) return "";
+    return JSON.stringify(c, null, 2);
+  };
+
   // --- Response normalization & debug logging ---
   const aiSummary = results?.ai_summary?.summary ?? results?.ai_summary ?? results?.summary ?? "";
   const foundDrugNames = results?.found_drug_names ?? results?.found_drugs ?? [];
@@ -303,7 +325,10 @@ function CheckPage() {
       console.log("aiSummary:", aiSummary);
       console.log("foundDrugNames:", foundDrugNames);
       console.log("drugDetails (count):", drugDetails.length);
-      if (drugDetails[0]) console.log("drugDetails[0]:", drugDetails[0]);
+      if (drugDetails[0]) {
+        console.log("drugDetails[0]:", drugDetails[0]);
+        console.log("drugDetails[0].druginfo:", drugDetails[0].druginfo);
+      }
       console.groupEnd();
     }
   }, [results]);
@@ -499,50 +524,16 @@ function CheckPage() {
             <div className="interactions-column">
               <h3>Potential Interactions</h3>
               {results.interactions?.length > 0 ? (
-                results.interactions.map((interaction, index) => {
-                  // Format severity for UI
-                  const formatSeverity = (severity) => {
-                    const severityUpper = (severity || '').toUpperCase();
-                    if (severityUpper === 'LOW' || severityUpper === 'MINOR') {
-                      return 'Low-level caution';
-                    } else if (severityUpper === 'MODERATE') {
-                      return 'Moderate interaction';
-                    } else if (severityUpper === 'MAJOR' || severityUpper === 'HIGH') {
-                      return 'Serious interaction';
-                    }
-                    return severity || 'Unknown';
-                  };
-
-                  // Clean description (remove technical jargon, make simple)
-                  const cleanDescription = (desc) => {
-                    if (!desc) return 'No description available.';
-                    // Remove confidence/score/provenance mentions if present
-                    let cleaned = desc
-                      .replace(/confidence:\s*\d+\.?\d*/gi, '')
-                      .replace(/score:\s*\d+\.?\d*/gi, '')
-                      .replace(/provenance:\s*\w+/gi, '')
-                      .trim();
-                    // Ensure it ends with the disclaimer
-                    if (!cleaned.endsWith('This tool does not replace professional medical advice.')) {
-                      cleaned += ' This tool does not replace professional medical advice.';
-                    }
-                    return cleaned;
-                  };
-
-                  const formattedSeverity = formatSeverity(interaction.severity);
-                  const cleanedDescription = cleanDescription(interaction.description);
-                  
-                  return (
-                    <div key={index} className={`card ${(interaction.severity || '').toLowerCase()}`}>
-                      <h4>{interaction.drug_1} & {interaction.drug_2}</h4>
-                      <p><strong>Severity:</strong> {formattedSeverity}</p>
-                      <CollapsibleCard 
-                        title="Interaction Details" 
-                        content={cleanedDescription} 
-                      />
-                    </div>
-                  );
-                })
+                results.interactions.map((interaction, index) => (
+                  <div key={index} className={`card ${interaction.severity.toLowerCase()}`}>
+                    <h4>{interaction.drug_1} & {interaction.drug_2}</h4>
+                    <p><strong>Severity:</strong> {interaction.severity}</p>
+                    <CollapsibleCard 
+                      title="Interaction Details" 
+                      content={interaction.description || "No description available."} 
+                    />
+                  </div>
+                ))
               ) : ( 
                 <div className="card info">
                   <p>No interactions were found between the specified drugs in our database.</p>
@@ -554,25 +545,49 @@ function CheckPage() {
             <div className="details-column">
               <h3>Drug Details</h3>
               {results.drug_details?.length > 0 ? (
-                results.drug_details.map((detail, index) => (
-                  <div key={index} className="card">
-                    <h4>{detail.name}</h4>
-                    {/* Safety Badge */}
-                    <SafetyBadge safety={detail.safety_check || detail.druginfo?.safety_check} />
-                    {detail.druginfo?.administration && (
-                      <CollapsibleCard title="Administration" content={detail.druginfo.administration} />
-                    )}
-                    {detail.druginfo?.side_effects && (
-                      <CollapsibleCard title="Side Effects" content={detail.druginfo.side_effects} />
-                    )}
-                    {detail.druginfo?.warnings && (
-                      <CollapsibleCard title="Warnings" content={detail.druginfo.warnings} />
-                    )}
-                    {!detail.druginfo?.administration && !detail.druginfo?.side_effects && !detail.druginfo?.warnings && (
-                      <p style={{marginTop: '16px', paddingTop: '10px', borderTop: '1px solid #475569'}}>No detailed information available.</p>
-                    )}
-                  </div>
-                ))
+                results.drug_details.map((detail, index) => {
+                  const administrationText = getDrugField(detail, "administration");
+                  const sideEffectsText = getDrugField(detail, "side_effects");
+                  const warningsText = getDrugField(detail, "warnings");
+                  const safetyCheck = detail.safety_check || null;
+                  
+                  return (
+                    <div key={index} className="card">
+                      <h4>{detail.name}</h4>
+                      
+                      {/* Safety Check - Show at top with badge */}
+                      {safetyCheck && (
+                        <CollapsibleCard 
+                          title="Safety Check" 
+                          content={safetyCheck}
+                          badge={safetyCheck.safety_badge}
+                        />
+                      )}
+                      
+                      {administrationText && (
+                        <CollapsibleCard title="Administration" content={safeContent(administrationText)} />
+                      )}
+                      {sideEffectsText && (
+                        <CollapsibleCard title="Side Effects" content={safeContent(sideEffectsText)} />
+                      )}
+                      {warningsText && (
+                        <CollapsibleCard title="Warnings" content={safeContent(warningsText)} />
+                      )}
+                      {!administrationText && !sideEffectsText && !warningsText && !safetyCheck && (
+                        <p style={{marginTop: '16px', paddingTop: '10px', borderTop: '1px solid #475569'}}>No detailed information available.</p>
+                      )}
+                      {/* DEBUG: Raw result (remove in production) */}
+                      {process.env.NODE_ENV === 'development' && (
+                        <details style={{marginTop: '10px', color: '#ccc', fontSize: '0.8rem'}}>
+                          <summary style={{cursor: 'pointer', color: '#9ca3af'}}>Raw result (debug)</summary>
+                          <pre style={{whiteSpace: 'pre-wrap', maxHeight: '200px', overflow: 'auto', background: '#1a262d', padding: '10px', borderRadius: '4px', marginTop: '5px'}}>
+                            {JSON.stringify(detail, null, 2)}
+                          </pre>
+                        </details>
+                      )}
+                    </div>
+                  );
+                })
               ) : (
                 <div className="card unknown">
                   <p>No detailed drug information is available for these items.</p>

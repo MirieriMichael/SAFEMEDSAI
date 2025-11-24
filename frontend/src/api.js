@@ -12,12 +12,14 @@ export async function getHealth() {
 }
 
 export async function checkInteractions(drugList) {
-  const res = await fetch(`${API_BASE}/api/drugs/check-interactions/`, {
+  // Use scan-and-check endpoint with drug names as FormData
+  const formData = new FormData();
+  formData.append('drug_names', drugList.join(','));
+
+  const res = await fetch(`${API_BASE}/api/drugs/scan-and-check/`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ drugs: drugList }),
+    // Don't set Content-Type for FormData - browser sets boundary automatically
+    body: formData,
   });
 
   if (!res.ok) {

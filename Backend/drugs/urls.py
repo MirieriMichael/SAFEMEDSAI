@@ -16,12 +16,14 @@ from .views import (
     ResendVerificationView,# <-- Ensure this is imported
     ChangePasswordView,
     PasswordResetRequestView,
-    PasswordResetConfirmView
+    PasswordResetConfirmView,
+    DrugDetailView
 )
 
 urlpatterns = [
     # Core
     path('scan-and-check/', ScanAndCheckView.as_view(), name='scan-and-check'),
+    path('detail/', DrugDetailView.as_view(), name='drug-detail'),
     
     # User
     path('history/', ScanHistoryView.as_view(), name='get_history'),

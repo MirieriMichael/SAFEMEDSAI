@@ -215,65 +215,57 @@
   color: #fff;
 }
 
+/* --- Collapsible Content Styles (Fixed for Visibility) --- */
 .collapsible-content {
-  color: #e5e7eb;
-  font-size: 0.9rem;
+  display: block; /* Always in DOM, never display:none */
+  color: #e6eef3 !important; /* Light readable color with high contrast */
   line-height: 1.5;
-  padding: 10px 0;
-  display: block;
-  visibility: visible;
+  white-space: normal;
+  word-wrap: break-word;
+  transition: max-height 0.3s ease-out, padding 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* Collapsed state - default closed */
+.collapsible-content.closed {
+  max-height: 0;
+  overflow: hidden;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  opacity: 0;
+}
+
+/* Expanded state */
+.collapsible-content.open {
+  max-height: 2000px; /* Large enough to avoid clipping during transition */
+  overflow: visible;
+  padding: 12px 16px;
+  margin-top: 10px;
+  padding-left: 10px;
+  border-left: 2px solid #4b5563;
   opacity: 1;
 }
-.collapsible-content.open {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  max-height: none;
-  overflow: visible;
+
+/* Text content wrapper */
+.collapsible-content-text {
+  color: #e6eef3 !important;
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
+
+/* Paragraphs inside collapsible content */
+.collapsible-content .collapsible-paragraph,
 .collapsible-content p {
-  color: #e5e7eb;
-  padding-bottom: 10px;
-  margin: 5px 0;
+  color: #e6eef3 !important; /* Force visible text color */
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 8px 0;
+  padding: 0;
+  opacity: 1 !important; /* Ensure full opacity */
 }
 /* --- END OF COLLAPSIBLE CARD FIX --- */
 
-
-/* --- Safety Badge Styles --- */
-.badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 4px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.badge-danger {
-  background-color: #ef4444;
-  color: #fff;
-}
-
-.badge-warning {
-  background-color: #f59e0b;
-  color: #fff;
-}
-
-.badge-info {
-  background-color: #3b82f6;
-  color: #fff;
-}
-
-.badge-success {
-  background-color: #22c55e;
-  color: #fff;
-}
-
-.badge-default {
-  background-color: #6b7280;
-  color: #fff;
-}
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
