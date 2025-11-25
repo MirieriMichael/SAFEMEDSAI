@@ -81,14 +81,15 @@ export async function getHealth() {
 }
 
 export async function checkInteractions(drugList) {
-  // Use scan-and-check endpoint with drug names as FormData
-  const formData = new FormData();
-  formData.append('drug_names', drugList.join(','));
-
+  // Use scan-and-check endpoint with drug names as JSON for manual entry
+  const authHeaders = getAuthHeaders();
+  
   const res = await fetch(`${API_BASE}/api/drugs/scan-and-check/`, {
     method: 'POST',
-    // Don't set Content-Type for FormData - browser sets boundary automatically
-    body: formData,
+    headers: authHeaders,
+    body: JSON.stringify({
+      manual_drugs: drugList
+    }),
   });
 
   if (!res.ok) {

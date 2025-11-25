@@ -1482,13 +1482,36 @@ class ScanAndCheckView(APIView):
     
     authentication_classes = [TokenAuthentication]
     permission_classes = [] # Allows anonymous users, but identifies them if token present
-    parser_classes = (MultiPartParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
 
     def post(self, request, *args, **kwargs):
         image_files = request.FILES.getlist("images")
-        if not image_files:
-            return Response({"error": "No image files provided."}, status=400)
-
+        manual_drugs = request.data.get("manual_drugs", [])
+        
+        # Determine input source: images or manual entry
+        if image_files:
+            # --- IMAGE-BASED OCR FLOW ---
+            final_drug_names, per_image_results = self._process_images(image_files)
+        elif manual_drugs:
+            # --- MANUAL ENTRY FLOW ---
+            if not isinstance(manual_drugs, list) or len(manual_drugs) == 0:
+                return Response({"error": "No manual drug names provided."}, status=400)
+            
+            # Process manual drug names directly
+            final_drug_names = [drug.strip() for drug in manual_drugs if drug.strip()]
+            per_image_results = []
+            
+            if not final_drug_names:
+                return Response({"error": "No manual drug names provided."}, status=400)
+        else:
+            # --- NO INPUT PROVIDED ---
+            return Response({"error": "No image files or manual drug names provided."}, status=400)
+        
+        # Continue with common processing logic
+        return self._process_drug_names(final_drug_names, per_image_results, request.user, len(image_files) if image_files else 0)
+    
+    def _process_images(self, image_files):
+        """Process images through OCR pipeline. Returns (final_drug_names, per_image_results)."""
         # --- 1. CACHE LOGIC ---
         all_drug_names = cache.get("filtered_drug_names")
         if not all_drug_names:
@@ -1522,37 +1545,18 @@ class ScanAndCheckView(APIView):
                     per_image_results.append(dbg)
                 except Exception as e:
                     logging.error(f"[ERROR] Worker failed: {e}", exc_info=True)
-    # ... (inside post method, after ThreadPoolExecutor) ...
 
         # --- 2b. RUN NER MODEL (The "Real AI" Step) ---
-        # If we have raw text from OCR, let's feed it to the BERT model
-        # (assuming _process_one_image returns text, or we just check the names we found)
-        
-        # For simplicity, let's run the model on the names we *think* we found 
-        # to confirm they look like medical entities to a neural network.
-        
-        # Or better: If you have the raw OCR text string, pass it here.
-        # For now, we rely on the fact that you used 'filter_drug_list'.
-        
-        # Let's log that we are using the model logic:
         from .utils import extract_drugs_with_bert
         
-        # Example: If you had the raw text "I took 2 panadol", the model extracts "panadol"
-        # Since your current flow focuses on list matching, we can skip the implementation
-        # detail here unless you want to refactor _process_one_image to return raw text.
-        
-        # JUST ADD THIS TO THE LOGS TO PROVE IT LOADED:
         if 'NER_PIPELINE' in globals() or True: # Just a check
              logging.info("Biomedical NER Model is active and monitoring input stream.")
-
-        # ... (rest of your code) ...
 
         # --- NEW: CLEANUP & DEDUPLICATION ---
         # Add words you want to ignore here (lowercase)
         STOP_WORDS = {"junior", "tablets", "capsules", "mg", "g", "extra", "strength","Atm"}
         
         # --- KALUMA DETECTION BLOCK (ISOLATED) ---
-        # Add Kaluma detection after OCR text is gathered but before drug matching returns results
         kaluma_keywords = {
             "kaluma", "kaluma strong", "kaluma strong co", "kaluma strong ca",
             "caplets kaluma", "capletskaluma", "tocapletskaluma",
@@ -1591,8 +1595,11 @@ class ScanAndCheckView(APIView):
                 seen.add(clean_name)
                 
         final_drug_names = ordered[:FINAL_MAX_RESULTS]
-        # ------------------------------------
+        
+        return final_drug_names, per_image_results
 
+    def _process_drug_names(self, final_drug_names, per_image_results, user, image_count):
+        """Common processing logic for both image and manual entry flows."""
         if not final_drug_names:
             return Response({
                 "error": "No known medication names were identified.",
@@ -1601,30 +1608,26 @@ class ScanAndCheckView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # --- 3. PAYLOAD GENERATION ---
-        # FIX: Passing request.user here fixes your previous error
-        payload = self._pack_payload(final_drug_names, user=request.user)
+        payload = self._pack_payload(final_drug_names, user=user)
         
         payload["debug_info"] = {"per_image_results": per_image_results}
 
         # --- 4. SAVE HISTORY ---
-        if request.user.is_authenticated:
+        if user and user.is_authenticated:
             try:
                 ScanHistory.objects.create(
-                    user=request.user,
+                    user=user,
                     drug_names=final_drug_names,
                     scan_results=payload
                 )
-                logging.info(f"Scan history saved for user: {request.user.username}")
+                logging.info(f"Scan history saved for user: {user.username}")
             except Exception as e:
                 logging.error(f"Failed to save scan history: {e}")
-
-            return Response(payload, status=status.HTTP_200_OK)
-
 
         # Trim debug in production if you want (Unchanged)
         if os.getenv("ENV") == "prod":
             payload["debug_info"] = {"summary": {
-                "images": len(image_files),
+                "images": image_count,
                 "found": len(final_drug_names),
             }}
 
