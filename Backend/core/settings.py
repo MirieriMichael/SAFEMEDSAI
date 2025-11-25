@@ -122,6 +122,7 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
+    'jazzmin',  # Must be before django.contrib.admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -229,6 +230,34 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # backend/core/settings.py
 
 # ... (bottom of file) ...
+
+# ============================================
+# JAZZMIN ADMIN THEME CONFIGURATION
+# ============================================
+JAZZMIN_SETTINGS = {
+    "site_title": "SafeMedsAI",
+    "site_header": "SafeMedsAI Admin",
+    "site_brand": "SafeMedsAI",
+    "welcome_sign": "Welcome to the SafeMedsAI Dashboard",
+    "search_model": "drugs.Drug",
+    "show_ui_builder": True,
+    "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "drugs.Drug": "fas fa-pills",
+        "drugs.DrugInfo": "fas fa-info-circle",
+        "drugs.Interaction": "fas fa-exclamation-triangle",
+        "drugs.Profile": "fas fa-user-md",
+        "drugs.ScanHistory": "fas fa-history",
+        "drugs.Notification": "fas fa-bell",
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+}
 
 # --- REAL EMAIL CONFIGURATION (GMAIL) ---
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
