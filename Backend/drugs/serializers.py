@@ -52,6 +52,8 @@ class ScanHistorySerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     # We add 'avatar_url' to help the frontend display it easily
     avatar_url = serializers.SerializerMethodField()
+    # Explicitly allow avatar to be optional in partial updates
+    avatar = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = Profile
@@ -59,6 +61,9 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_avatar_url(self, obj):
         if obj.avatar:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.avatar.url)
             return obj.avatar.url
         return None
 

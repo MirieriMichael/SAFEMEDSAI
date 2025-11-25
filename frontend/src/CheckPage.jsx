@@ -475,23 +475,6 @@ function CheckPage() {
             <p style={{marginTop: '20px', color: '#ccc'}}>Analyzing medications...</p>
         </div>
       )}
-      {/* DEBUG: raw JSON payload (remove in production) */}
-      {results && (
-        <details style={{marginBottom: '20px', color:'#ccc', padding: '10px', background: '#1a262d', border: '1px solid #475569', borderRadius: '4px'}}>
-          <summary style={{cursor: 'pointer', fontWeight: '600', marginBottom: '8px'}}>🔍 DEBUG: Raw API Response (click to view)</summary>
-          <pre style={{whiteSpace:'pre-wrap', maxHeight:'300px', overflow:'auto', color: '#e5e7eb', fontSize: '0.85rem', padding: '10px', background: '#0f172a', borderRadius: '4px'}}>{JSON.stringify(results, null, 2)}</pre>
-        </details>
-      )}
-
-      {/* DEBUG: Test div to verify content visibility outside CollapsibleCard */}
-      {results && results.drug_details && results.drug_details.length > 0 && results.drug_details[0].druginfo?.administration && (
-        <div style={{marginBottom: '20px', padding: '10px', background: '#1e3a8a', border: '1px solid #3b82f6', borderRadius: '4px', color: '#e5e7eb'}}>
-          <strong>🧪 DEBUG TEST:</strong> Direct render of administration text (should be visible):
-          <div style={{marginTop: '8px', padding: '8px', background: '#0f172a', borderRadius: '4px'}}>
-            {results.drug_details[0].druginfo.administration}
-          </div>
-        </div>
-      )}
 
       {/* --- RESULTS SECTION --- */}
       {results && (
@@ -575,15 +558,6 @@ function CheckPage() {
                       )}
                       {!administrationText && !sideEffectsText && !warningsText && !safetyCheck && (
                         <p style={{marginTop: '16px', paddingTop: '10px', borderTop: '1px solid #475569'}}>No detailed information available.</p>
-                      )}
-                      {/* DEBUG: Raw result (remove in production) */}
-                      {process.env.NODE_ENV === 'development' && (
-                        <details style={{marginTop: '10px', color: '#ccc', fontSize: '0.8rem'}}>
-                          <summary style={{cursor: 'pointer', color: '#9ca3af'}}>Raw result (debug)</summary>
-                          <pre style={{whiteSpace: 'pre-wrap', maxHeight: '200px', overflow: 'auto', background: '#1a262d', padding: '10px', borderRadius: '4px', marginTop: '5px'}}>
-                            {JSON.stringify(detail, null, 2)}
-                          </pre>
-                        </details>
                       )}
                     </div>
                   );

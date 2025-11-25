@@ -629,11 +629,14 @@ export default function ProfilePage() {
       <div style={{ display: 'flex', alignItems: 'center', gap: '30px', borderBottom: '1px solid #444', paddingBottom: '30px' }}>
         <div style={{ position: 'relative' }}>
           <img 
-            src={profile.avatar_url ? `${profile.avatar_url}` : "https://placehold.co/100x100/374151/FFF/png?text=User"} 
+            src={profile.avatar_url || "https://placehold.co/128x128/374151/FFF/png?text=User"} 
             alt="Profile" 
             style={{ 
-               width: '100px', height: '100px', borderRadius: '50%', 
+               width: '128px', height: '128px', borderRadius: '50%', 
                objectFit: 'cover', border: '3px solid #1193d4', background: '#1e293b'
+            }}
+            onError={(e) => {
+              e.target.src = "https://placehold.co/128x128/374151/FFF/png?text=User";
             }}
           />
           <label htmlFor="avatar-upload" style={{

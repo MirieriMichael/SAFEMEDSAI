@@ -191,38 +191,15 @@ a:focus { outline: 2px solid #1193d4; outline-offset: 2px; }
   .app-nav { padding: 12px 20px; }
   .navbar-username { margin-right: 8px; font-size: 0.95rem; }
 }
-/* ---------- DEBUG / TEMP (paste at bottom; remove after debugging) ---------- */
-/* Show elements that are fullscreen and possibly blocking clicks */
-[data-debug-overlay] {
-  outline: 3px dashed rgba(255, 0, 0, 0.9);
-  background: rgba(255,0,0,0.02);
-  pointer-events: none; /* visual only */
-  z-index: 2000 !important;
+/* ---------- DEBUG / TEMP - HIDDEN FROM END USERS ---------- */
+/* Debug overlays and visual aids are hidden in production */
+[data-debug-overlay],
+*[style*="pointer-events: none"].blocking-overlay,
+.debug-container,
+.debug-section,
+[class*="debug"] {
+  display: none !important;
 }
-
-/* Mark elements that explicitly disable pointer events */
-* {
-  /* show a faint yellow outline on elements that have pointer-events: none */
-}
-*[style*="pointer-events: none"], .blocking-overlay {
-  outline: 2px dashed rgba(255, 200, 0, 0.9);
-}
-
-/* For modal/backdrop detection: highlight any fixed or absolute full-screen elements */
-:where(*[style*="position:fixed"], *[style*="position:absolute"]) {
-  /* only highlight very large ones to reduce noise */
-}
-@media (min-width:0px) {
-  /* find elements that occupy most of viewport (heuristic) */
-  /* This is visual-only — remove after debugging */
-  .modal-backdrop, .modal, .overlay, .backdrop, [role="dialog"] {
-    outline: 2px dashed rgba(0, 170, 255, 0.9);
-    box-shadow: 0 0 0 3px rgba(0,170,255,0.04);
-  }
-}
-
-/* show focus for links so we can tab to them during debug */
-.navbar-username:focus { outline: 3px solid #ffdb4d; outline-offset: 2px; }
 /* =========================================
    ADD THIS TO THE BOTTOM OF APP.CSS
    This fixes the invisible text and styles the cards

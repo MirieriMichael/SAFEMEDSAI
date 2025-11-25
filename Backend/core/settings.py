@@ -225,7 +225,7 @@ REST_FRAMEWORK = {
 # ... at the very bottom ...
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 # backend/core/settings.py
 
 # ... (bottom of file) ...
