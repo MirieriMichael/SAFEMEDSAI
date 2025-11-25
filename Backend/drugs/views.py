@@ -225,7 +225,90 @@ ophthalmic sterile ophthalmology eye drops solution drops rinse
 STOP_WORDS |= {"aspen", "care", "relief", "healthcare", "mara", "moja","rid",}
 
 # Hardcoded drug details (additive only, does not replace existing lookups)
+# --- SAFEMED PATCH START ---
+# Drug synonym mapping for auto-correction
+# ENO aliases MUST be placed BEFORE Valerin logic
+DRUG_SYNONYM_MAP = {
+    # ENO aliases (must be before Valerin)
+    "eno": "Eno (Antacid)",
+    "dr eno": "Eno (Antacid)",
+    "dreno": "Eno (Antacid)",
+    "dr_eno": "Eno (Antacid)",
+    "dr-eno": "Eno (Antacid)",
+    "dr. eno": "Eno (Antacid)",
+    "dr.en o": "Eno (Antacid)",
+    "fofa": "Eno (Antacid)",
+    "fo fa": "Eno (Antacid)",
+    "iad": "Eno (Antacid)",
+    # Valerin aliases
+    "valerin": "Sleep Aid (Valerin)",
+    "valerin tablets": "Sleep Aid (Valerin)",
+    "vakerin": "Sleep Aid (Valerin)",
+    "valerine": "Sleep Aid (Valerin)",
+    "valerina": "Sleep Aid (Valerin)",
+    "valarin": "Sleep Aid (Valerin)",
+    "valaren": "Sleep Aid (Valerin)",
+    # Keep other mappings for SleepAid variants
+    "valarian": "SleepAid",
+    "valaryna": "SleepAid",
+    "valerian": "SleepAid",
+    "valaryn": "SleepAid",
+    "valaren tablets": "SleepAid",
+    "valerian root": "SleepAid",
+    "valern": "SleepAid",
+    "valkerim": "SleepAid",
+    "sleepaid": "SleepAid",
+    "sleep aid": "SleepAid",
+    "healthaid sleepaid": "SleepAid",
+    "sleep-aid": "SleepAid",
+    "calming sleep": "SleepAid",
+    "hops valerian passion flower": "SleepAid",
+}
+# --- SAFEMED PATCH END ---
+
 hardcoded_drug_details = {
+    # --- SAFEMED PATCH START ---
+    "eno": {
+        "name": "Eno (Antacid)",
+        "generic_name": "Eno",
+        "uses": "Relieves heartburn and acidity.",
+        "administration": "Dissolve in water and drink immediately. Follow the packet instructions.",
+        "warnings": "Not for long-term use. Avoid if you have kidney problems or are on sodium restrictions.",
+        "side_effects": "Mild gas or bloating.",
+    },
+    "dr eno": {
+        "name": "Eno (Antacid)",
+        "generic_name": "Eno",
+        "uses": "Relieves heartburn and acidity.",
+        "administration": "Dissolve in water and drink immediately. Follow the packet instructions.",
+        "warnings": "Not for long-term use. Avoid if you have kidney problems or are on sodium restrictions.",
+        "side_effects": "Mild gas or bloating.",
+    },
+    "dreno": {
+        "name": "Eno (Antacid)",
+        "generic_name": "Eno",
+        "uses": "Relieves heartburn and acidity.",
+        "administration": "Dissolve in water and drink immediately. Follow the packet instructions.",
+        "warnings": "Not for long-term use. Avoid if you have kidney problems or are on sodium restrictions.",
+        "side_effects": "Mild gas or bloating.",
+    },
+    "fofa": {
+        "name": "Eno (Antacid)",
+        "generic_name": "Eno",
+        "uses": "Relieves heartburn and acidity.",
+        "administration": "Dissolve in water and drink immediately. Follow the packet instructions.",
+        "warnings": "Not for long-term use. Avoid if you have kidney problems or are on sodium restrictions.",
+        "side_effects": "Mild gas or bloating.",
+    },
+    "iad": {
+        "name": "Eno (Antacid)",
+        "generic_name": "Eno",
+        "uses": "Relieves heartburn and acidity.",
+        "administration": "Dissolve in water and drink immediately. Follow the packet instructions.",
+        "warnings": "Not for long-term use. Avoid if you have kidney problems or are on sodium restrictions.",
+        "side_effects": "Mild gas or bloating.",
+    },
+    # --- SAFEMED PATCH END ---
     "kaluma": {
         "name": "Kaluma",
         "generic_name": "Kaluma",
@@ -261,6 +344,41 @@ hardcoded_drug_details = {
         "administration": "Take as directed on the packaging. Usually taken with water, with or without food. Follow the recommended dosage instructions.",
         "warnings": "Do not exceed the recommended dose. If symptoms persist or worsen, consult a healthcare provider. Keep out of reach of children.",
     },
+    # --- SAFEMED PATCH START ---
+    # Sleep Aid (Valerin) - static mapping for Valerin variants
+    "sleep aid (valerin)": {
+        "name": "Sleep Aid (Valerin)",
+        "generic_name": "Sleep Aid (Valerin)",
+        "uses": "Helps with sleep support and relaxation.",
+        "administration": "Take exactly as stated on the packet. Avoid alcohol and heavy machinery.",
+        "warnings": "May cause drowsiness. Do not combine with other sedatives.",
+        "side_effects": "Drowsiness, dizziness, mild stomach upset may occur.",
+    },
+    "sleepaid": {
+        "name": "SleepAid",
+        "generic_name": "SleepAid",
+        "uses": "Helps promote calm, natural sleep using Valerian, Hops, and Passion Flower.",
+        "administration": "Take 1–2 tablets at bedtime. Do not exceed the recommended dose.",
+        "warnings": "Avoid alcohol. May cause drowsiness. Not for pregnant or breastfeeding individuals. Consult a clinician if symptoms persist.",
+        "side_effects": "Drowsiness, dizziness, mild stomach upset may occur.",
+    },
+    "sleep aid": {
+        "name": "SleepAid",
+        "generic_name": "SleepAid",
+        "uses": "Helps promote calm, natural sleep using Valerian, Hops, and Passion Flower.",
+        "administration": "Take 1–2 tablets at bedtime. Do not exceed the recommended dose.",
+        "warnings": "Avoid alcohol. May cause drowsiness. Not for pregnant or breastfeeding individuals. Consult a clinician if symptoms persist.",
+        "side_effects": "Drowsiness, dizziness, mild stomach upset may occur.",
+    },
+    "healthaid sleepaid": {
+        "name": "SleepAid",
+        "generic_name": "SleepAid",
+        "uses": "Helps promote calm, natural sleep using Valerian, Hops, and Passion Flower.",
+        "administration": "Take 1–2 tablets at bedtime. Do not exceed the recommended dose.",
+        "warnings": "Avoid alcohol. May cause drowsiness. Not for pregnant or breastfeeding individuals. Consult a clinician if symptoms persist.",
+        "side_effects": "Drowsiness, dizziness, mild stomach upset may occur.",
+    },
+    # --- SAFEMED PATCH END ---
 }
 
 BLACKLIST_PATTERNS = [
@@ -702,8 +820,22 @@ def _process_one_image(
         "tocapletskaluma", "rikaluma", "rikalumastrong", "kalumastrong",
         "kalumastrongco", "kalumastrongca", "100 ri kaluma"
     ]
+    # --- SAFEMED PATCH START ---
+    # HARD SLEEPAID EARLY DETECTION
+    sleepaid_markers = [
+        "sleepaid", "sleep aid", "healthaid sleepaid"
+    ]
+    # --- SAFEMED PATCH END ---
     # Combine all raw text from OCR
     combined_raw_text = " ".join(raw_texts).lower() if raw_texts else ""
+    # --- SAFEMED PATCH START ---
+    # OCR cleanup booster - fix common misspellings before matching
+    combined_raw_text = combined_raw_text.replace("vakerin", "valerin")
+    combined_raw_text = combined_raw_text.replace("valrien", "valerian")
+    combined_raw_text = combined_raw_text.replace("vale rin", "valerin")
+    combined_raw_text = combined_raw_text.replace("valeian", "valerian")
+    combined_raw_text = combined_raw_text.replace("sleep aid", "sleepaid")
+    # --- SAFEMED PATCH END ---
     if any(marker in combined_raw_text for marker in kaluma_markers):
         logging.debug("FORCED MATCH: Kaluma detected via keyword override.")
         # Return early with Kaluma as the top match
@@ -716,6 +848,21 @@ def _process_one_image(
         }
         cache.set(cache_key, {"top_name": "Kaluma", "dbg": dbg}, timeout=CACHE_OCR_SECONDS)
         return "Kaluma", dbg
+    # --- SAFEMED PATCH START ---
+    if any(marker in combined_raw_text for marker in sleepaid_markers):
+        logging.debug("FORCED MATCH: SleepAid detected via keyword override.")
+        # Return early with SleepAid as the top match
+        sleepaid_name = "SleepAid (Hops, Valerian, Passion Flower)"
+        dbg = {
+            "tokens_count": len(best_variant_tokens),
+            "candidates_count": len(image_candidates),
+            "matches": [{"name": sleepaid_name, "score": 100}],
+            "early_exit": True,
+            "sleepaid_forced": True,
+        }
+        cache.set(cache_key, {"top_name": sleepaid_name, "dbg": dbg}, timeout=CACHE_OCR_SECONDS)
+        return sleepaid_name, dbg
+    # --- SAFEMED PATCH END ---
 
     matches = best_drug_matches(
         image_candidates, all_drug_names, min_score=PER_IMAGE_MIN_SCORE, topk=5,
@@ -795,6 +942,14 @@ def _process_one_image(
     # --- HARD KALUMA EARLY DETECTION (after all OCR passes) ---
     # Check again after heavy rotation and relaxed passes have updated raw_texts
     combined_raw_text = " ".join(raw_texts).lower() if raw_texts else ""
+    # --- SAFEMED PATCH START ---
+    # OCR cleanup booster - fix common misspellings before matching
+    combined_raw_text = combined_raw_text.replace("vakerin", "valerin")
+    combined_raw_text = combined_raw_text.replace("valrien", "valerian")
+    combined_raw_text = combined_raw_text.replace("vale rin", "valerin")
+    combined_raw_text = combined_raw_text.replace("valeian", "valerian")
+    combined_raw_text = combined_raw_text.replace("sleep aid", "sleepaid")
+    # --- SAFEMED PATCH END ---
     if any(marker in combined_raw_text for marker in kaluma_markers):
         logging.debug("FORCED MATCH: Kaluma detected via keyword override (after all OCR passes).")
         # Return early with Kaluma as the top match
@@ -807,6 +962,25 @@ def _process_one_image(
         }
         cache.set(cache_key, {"top_name": "Kaluma", "dbg": dbg}, timeout=CACHE_OCR_SECONDS)
         return "Kaluma", dbg
+    # --- SAFEMED PATCH START ---
+    # HARD SLEEPAID EARLY DETECTION (after all OCR passes)
+    sleepaid_markers = [
+        "sleepaid", "sleep aid", "healthaid sleepaid"
+    ]
+    if any(marker in combined_raw_text for marker in sleepaid_markers):
+        logging.debug("FORCED MATCH: SleepAid detected via keyword override (after all OCR passes).")
+        # Return early with SleepAid as the top match
+        sleepaid_name = "SleepAid (Hops, Valerian, Passion Flower)"
+        dbg = {
+            "tokens_count": len(best_variant_tokens),
+            "candidates_count": len(image_candidates),
+            "matches": [{"name": sleepaid_name, "score": 100}],
+            "early_exit": True,
+            "sleepaid_forced": True,
+        }
+        cache.set(cache_key, {"top_name": sleepaid_name, "dbg": dbg}, timeout=CACHE_OCR_SECONDS)
+        return sleepaid_name, dbg
+    # --- SAFEMED PATCH END ---
     
     matches = best_drug_matches(
         image_candidates, all_drug_names, min_score=PER_IMAGE_MIN_SCORE, topk=5,
@@ -1181,10 +1355,17 @@ def synthesize_interactions_from_drug_texts(drug_info_map, found_drugs, existing
         existing_interactions = []
     
     # Track existing pairs to avoid duplicates
+    # But also track pairs that need description filled in (have severity but no description)
     existing_pairs = set()
+    pairs_needing_description = set()
     for inter in existing_interactions:
         pair = tuple(sorted([inter.get('drug_1', ''), inter.get('drug_2', '')]))
         existing_pairs.add(pair)
+        # Check if this interaction has severity but missing description
+        description = inter.get('description', '').strip()
+        severity = inter.get('severity', '') or inter.get('interaction_level', '')
+        if severity and not description:
+            pairs_needing_description.add(pair)
     
     # Mechanistic keyword buckets
     MECHANISMS = {
@@ -1203,9 +1384,10 @@ def synthesize_interactions_from_drug_texts(drug_info_map, found_drugs, existing
     drug_pairs = list(combinations(found_drugs, 2))
     
     for drug1, drug2 in drug_pairs:
-        # Skip if already exists
         pair_key = tuple(sorted([drug1, drug2]))
-        if pair_key in existing_pairs:
+        # Skip if already exists with complete data (has both severity and description)
+        # But allow synthesis if it needs description filled in
+        if pair_key in existing_pairs and pair_key not in pairs_needing_description:
             continue
         
         # Get drug info texts
@@ -1484,6 +1666,45 @@ class ScanAndCheckView(APIView):
     permission_classes = [] # Allows anonymous users, but identifies them if token present
     parser_classes = (MultiPartParser, FormParser, JSONParser)
 
+    def normalize_drug_name(self, name):
+        """
+        Normalizes drug name for consistent lookup:
+        - Trim whitespace
+        - Lowercase
+        - Remove punctuation
+        - Match aliases (Cycloyl, etc.)
+        - Apply synonym mapping (Valerin -> SleepAid, etc.)
+        Returns canonical key for drug_details lookup.
+        """
+        import re
+        if not name or not isinstance(name, str):
+            return ""
+        
+        # Trim whitespace
+        normalized = name.strip()
+        
+        # Convert to lowercase
+        normalized = normalized.lower()
+        
+        # Remove punctuation (keep only alphanumeric and spaces)
+        normalized = re.sub(r'[^a-z0-9\s]', '', normalized)
+        
+        # Normalize multiple spaces to single space
+        normalized = re.sub(r'\s+', ' ', normalized).strip()
+        
+        # --- SAFEMED PATCH START ---
+        # Apply synonym mapping (e.g., Valerin -> SleepAid)
+        if normalized in DRUG_SYNONYM_MAP:
+            normalized = DRUG_SYNONYM_MAP[normalized].lower()
+        # --- SAFEMED PATCH END ---
+        
+        # Match aliases - Cycloyl normalization
+        cycloyl_aliases = ["cycloyl", "cyclo yl", "cycloyl tablets", "cycloyl caplets"]
+        if any(alias in normalized for alias in cycloyl_aliases):
+            normalized = "cycloyl"
+        
+        return normalized
+
     def post(self, request, *args, **kwargs):
         image_files = request.FILES.getlist("images")
         manual_drugs = request.data.get("manual_drugs", [])
@@ -1497,12 +1718,34 @@ class ScanAndCheckView(APIView):
             if not isinstance(manual_drugs, list) or len(manual_drugs) == 0:
                 return Response({"error": "No manual drug names provided."}, status=400)
             
-            # Process manual drug names directly
-            final_drug_names = [drug.strip() for drug in manual_drugs if drug.strip()]
+            # Normalize manual drug names (same as OCR normalization)
+            normalized_names = []
+            for drug in manual_drugs:
+                if drug and drug.strip():
+                    normalized = self.normalize_drug_name(drug)
+                    if normalized:
+                        normalized_names.append(normalized)
+            
+            # Try to find canonical names from DB for normalized names
+            final_drug_names = []
+            for norm_name in normalized_names:
+                # Try exact match first (case-insensitive)
+                try:
+                    drug_obj = Drug.objects.get(name__iexact=norm_name)
+                    final_drug_names.append(drug_obj.name)  # Use canonical name from DB
+                except Drug.DoesNotExist:
+                    # Try LocalBrand
+                    try:
+                        brand_obj = LocalBrand.objects.get(brand_name__iexact=norm_name)
+                        final_drug_names.append(brand_obj.brand_name)  # Use canonical brand name
+                    except LocalBrand.DoesNotExist:
+                        # Fallback: use normalized name as-is (AI will handle it)
+                        final_drug_names.append(norm_name.title())  # Capitalize for display
+            
             per_image_results = []
             
             if not final_drug_names:
-                return Response({"error": "No manual drug names provided."}, status=400)
+                return Response({"error": "No valid drug names found after normalization."}, status=400)
         else:
             # --- NO INPUT PROVIDED ---
             return Response({"error": "No image files or manual drug names provided."}, status=400)
@@ -1732,18 +1975,44 @@ class ScanAndCheckView(APIView):
                 return {"summary": "AI did not return content.", "drug_details": drug_details}
 
             # 7. Parse JSON
+            # --- SAFEMED PATCH START ---
             clean_json = generated_text.replace("```json", "").replace("```", "").strip()
             start_idx = clean_json.find("{")
             end_idx = clean_json.rfind("}")
             if start_idx != -1 and end_idx != -1:
                 clean_json = clean_json[start_idx: end_idx + 1]
             
+            data = {}
             try:
                 data = json.loads(clean_json)
             except json.JSONDecodeError as jde:
-                logger.warning("JSON decode failed: %s", jde)
-                # Fallback: Return raw text if JSON fails
-                return {"summary": generated_text, "drug_details": drug_details}
+                logger.warning("JSON decode failed (first attempt): %s", jde)
+                logger.warning("Raw text: %s", clean_json[:500])  # Log first 500 chars
+                
+                # Force-safe JSON mode: strip fences, fix quotes, remove trailing commas
+                try:
+                    # Strip ```json fences (already done, but ensure)
+                    safe_json = clean_json.replace("```json", "").replace("```", "").strip()
+                    
+                    # Replace single quotes with double quotes (but preserve escaped quotes)
+                    import re
+                    # Replace single quotes around keys and string values
+                    safe_json = re.sub(r"'(\w+)':", r'"\1":', safe_json)  # Keys
+                    safe_json = re.sub(r":\s*'([^']*)'", r': "\1"', safe_json)  # String values
+                    
+                    # Remove trailing commas before closing braces/brackets
+                    safe_json = re.sub(r',(\s*[}\]])', r'\1', safe_json)
+                    
+                    # Try parsing again
+                    data = json.loads(safe_json)
+                    logger.info("JSON decode succeeded after force-safe mode")
+                except (json.JSONDecodeError, Exception) as jde2:
+                    logger.warning("JSON decode failed (force-safe mode): %s", jde2)
+                    # Return empty dict instead of crashing
+                    data = {}
+                    # Fallback: Return raw text if JSON fails completely
+                    return {"summary": generated_text, "drug_details": drug_details}
+            # --- SAFEMED PATCH END ---
 
             final_summary = data.get("summary", "AI Analysis Complete.")
             # Expand abbreviations in summary
@@ -1763,7 +2032,17 @@ class ScanAndCheckView(APIView):
                 candidate_names = [d.get("name", "").strip() for d in drug_details if d.get("name")]
 
                 def find_best_match(model_name):
+                    # --- SAFEMED PATCH START ---
+                    # Handle case where model_name might be a list
+                    if isinstance(model_name, list):
+                        model_name = " ".join(model_name)
+                    # --- SAFEMED PATCH END ---
                     for c in candidate_names:
+                        # --- SAFEMED PATCH START ---
+                        # Handle case where c might be a list
+                        if isinstance(c, list):
+                            c = " ".join(c)
+                        # --- SAFEMED PATCH END ---
                         if c.lower() == model_name.lower(): return c
                     matches = get_close_matches(model_name, candidate_names, n=1, cutoff=0.6)
                     return matches[0] if matches else None
@@ -1870,18 +2149,34 @@ class ScanAndCheckView(APIView):
                 # Continue to allow other lookups to proceed, but hardcoded will override
             # --- END KALUMA DETAILS CHECK ---
             
-            # Try Main Drug Table
+            # Try Main Drug Table (case-insensitive lookup)
+            drug_obj = None
             try:
                 drug_obj = Drug.objects.get(name__iexact=name_lower)
-                all_drug_objects_in_db.append(drug_obj)
-                generic_names_to_check.add(drug_obj.name) 
-                continue 
             except Drug.DoesNotExist:
-                pass 
+                # Try with original name (case-sensitive) if lowercase didn't work
+                try:
+                    drug_obj = Drug.objects.get(name__iexact=name)
+                except Drug.DoesNotExist:
+                    pass
+            
+            if drug_obj:
+                all_drug_objects_in_db.append(drug_obj)
+                generic_names_to_check.add(drug_obj.name)
+                continue
 
-            # Try Local Brand Table
+            # Try Local Brand Table (case-insensitive lookup)
+            local_brand_obj = None
             try:
                 local_brand_obj = LocalBrand.objects.get(brand_name__iexact=name_lower)
+            except LocalBrand.DoesNotExist:
+                # Try with original name (case-sensitive) if lowercase didn't work
+                try:
+                    local_brand_obj = LocalBrand.objects.get(brand_name__iexact=name)
+                except LocalBrand.DoesNotExist:
+                    pass
+            
+            if local_brand_obj:
                 ingredients = local_brand_obj.generic_names
                 
                 # Store the mapping: "Mara Moja" -> ["Aspirin", "Caffeine"]
@@ -1892,9 +2187,11 @@ class ScanAndCheckView(APIView):
                 
                 ingredient_objs = Drug.objects.filter(name__in=ingredients)
                 all_drug_objects_in_db.extend(list(ingredient_objs))
-                
-            except LocalBrand.DoesNotExist:
-                pass # AI Fallback handles this later
+            
+            # If neither Drug nor LocalBrand found, still add to generic_names_to_check
+            # so that AI can handle it and interactions can be generated
+            if not drug_obj and not local_brand_obj:
+                generic_names_to_check.add(name)  # Use original name for lookup
         
         # 2. Serialize Data
         unique_drug_objects = list({obj.id: obj for obj in all_drug_objects_in_db}.values())
@@ -1911,42 +2208,79 @@ class ScanAndCheckView(APIView):
         serialized_drug_details = deduplicated_drug_details
         
         # --- HARD-CODE KALUMA DETAILS INJECTION (SAFE FIX) ---
-        # Inject hardcoded details for Kaluma if present in drug_names
+        # Inject hardcoded details for Kaluma and other hardcoded drugs if present in drug_names
         for name in drug_names:
             name_lower = name.lower()
+            # --- SAFEMED PATCH START ---
+            # Also check for normalized names (e.g., Valerin -> Sleep Aid (Valerin))
+            normalized_name = self.normalize_drug_name(name) if hasattr(self, 'normalize_drug_name') else name_lower
+            mapped_name = None
+            if normalized_name in DRUG_SYNONYM_MAP:
+                mapped_name = DRUG_SYNONYM_MAP[normalized_name]
+                # If mapped to Sleep Aid (Valerin), use that as lookup key
+                if "Sleep Aid (Valerin)" in mapped_name or mapped_name == "Sleep Aid (Valerin)":
+                    normalized_name = "sleep aid (valerin)"
+                else:
+                    normalized_name = mapped_name.lower()
+            # Check both original name and normalized name
+            lookup_key = None
             if name_lower in hardcoded_drug_details:
+                lookup_key = name_lower
+            elif normalized_name in hardcoded_drug_details:
+                lookup_key = normalized_name
+            # Also check if mapped_name directly matches a hardcoded entry
+            if not lookup_key and mapped_name:
+                mapped_lower = mapped_name.lower()
+                if mapped_lower in hardcoded_drug_details:
+                    lookup_key = mapped_lower
+            # --- SAFEMED PATCH END ---
+            
+            if lookup_key and lookup_key in hardcoded_drug_details:
                 # Check if already in serialized_drug_details
                 found = False
+                hardcoded_detail = hardcoded_drug_details[lookup_key]
+                hardcoded_name = hardcoded_detail.get("name", name)
+                
                 for detail in serialized_drug_details:
-                    if detail.get("name", "").lower() == name_lower:
+                    detail_name_lower = detail.get("name", "").lower()
+                    # Match by exact name or if it's a Valerin variant
+                    if (detail_name_lower == name_lower or 
+                        detail_name_lower == normalized_name or
+                        detail_name_lower == hardcoded_name.lower() or
+                        (name_lower in ["valerin", "valerin tablets", "vakerin", "valerine", "valerina", "valarin", "valaren"] and 
+                         "sleep aid" in detail_name_lower and "valerin" in detail_name_lower)):
                         # Override with hardcoded details
-                        hardcoded_detail = hardcoded_drug_details[name_lower]
                         detail["druginfo"] = {
+                            "uses": hardcoded_detail.get("uses", ""),
                             "side_effects": hardcoded_detail.get("side_effects", ""),
                             "administration": hardcoded_detail.get("administration", ""),
                             "warnings": hardcoded_detail.get("warnings", ""),
                         }
+                        detail["uses"] = hardcoded_detail.get("uses", "")
                         detail["side_effects"] = hardcoded_detail.get("side_effects", "")
                         detail["administration"] = hardcoded_detail.get("administration", "")
                         detail["warnings"] = hardcoded_detail.get("warnings", "")
+                        detail["name"] = hardcoded_name  # Ensure name is correct
                         found = True
                         break
                 # If not found, add as new entry
                 if not found:
-                    hardcoded_detail = hardcoded_drug_details[name_lower]
                     new_entry = {
-                        "name": hardcoded_detail.get("name", name),
-                        "generic_name": hardcoded_detail.get("generic_name", name),
+                        "name": hardcoded_name,
+                        "generic_name": hardcoded_detail.get("generic_name", hardcoded_name),
                         "druginfo": {
+                            "uses": hardcoded_detail.get("uses", ""),
                             "side_effects": hardcoded_detail.get("side_effects", ""),
                             "administration": hardcoded_detail.get("administration", ""),
                             "warnings": hardcoded_detail.get("warnings", ""),
                         },
+                        "uses": hardcoded_detail.get("uses", ""),
                         "side_effects": hardcoded_detail.get("side_effects", ""),
                         "administration": hardcoded_detail.get("administration", ""),
                         "warnings": hardcoded_detail.get("warnings", ""),
                     }
                     serialized_drug_details.append(new_entry)
+                    logger.info(f"[INFO] Using static mapping for {name} → {hardcoded_name}")
         # --- END KALUMA DETAILS INJECTION ---
         
         # 2a. Add patient safety checks and alerts for each drug (if user is authenticated)
@@ -2016,11 +2350,22 @@ class ScanAndCheckView(APIView):
         local_interactions = []
         final_ingredient_list = list(generic_names_to_check)
         db_interactions_count = 0
+        interactions_missing_description = False
         
         if len(final_ingredient_list) >= 2:
             local_interactions = Interaction.get_interactions(final_ingredient_list)
             db_interactions_count = len(local_interactions)
             logger.info(f"db_interactions_count: {db_interactions_count}")
+            
+            # Check if any DB interaction has severity but missing/empty description
+            for inter in local_interactions:
+                description = inter.get('description', '').strip()
+                severity = inter.get('severity', '')
+                # If interaction has severity but no description, mark for AI fill
+                if severity and not description:
+                    interactions_missing_description = True
+                    logger.info(f"DB interaction {inter.get('drug_1')} + {inter.get('drug_2')} has severity but missing description - will request AI fill")
+                    break
 
         # Step 2: Try AI-parsed interactions (if any in AI summary)
         ai_interactions_count = 0
@@ -2073,6 +2418,122 @@ class ScanAndCheckView(APIView):
                         'warnings': hardcoded_detail.get('warnings', '') or ''
                     }
         
+        # Helper function to check if a value is missing
+        def is_missing(value):
+            """
+            Check if a field value is considered missing.
+            Returns True if value is None, empty, whitespace-only, or a placeholder.
+            """
+            if value is None:
+                return True
+            
+            # Convert to string and strip whitespace
+            value_str = str(value).strip()
+            
+            # Check if empty or whitespace-only
+            if not value_str:
+                return True
+            
+            # Check for placeholder values (case-insensitive)
+            placeholder_values = ["n/a", "unknown", "none", "not available"]
+            if value_str.lower() in placeholder_values:
+                return True
+            
+            return False
+        
+        # Helper function to check if drug details are incomplete
+        def drug_details_incomplete(drug, serialized_drug_details_list):
+            """
+            Check if a drug has missing or incomplete details.
+            Returns True if drug details are incomplete (should trigger AI).
+            """
+            # --- SAFEMED PATCH START ---
+            # Skip check for Valerin/Sleep Aid (Valerin) - use static mapping
+            drug_name_lower = drug.name.lower()
+            valerin_variants = ["valerin", "sleep aid (valerin)", "sleep aid valerin"]
+            if any(variant in drug_name_lower for variant in valerin_variants):
+                logger.info("[INFO] Using static mapping for Valerin → Sleep Aid")
+                return False  # Not incomplete - has static mapping
+            # --- SAFEMED PATCH END ---
+            
+            # Define fallback strings that indicate missing/incomplete data
+            fallback_strings = [
+                "Data not available in public databases.",
+                "No side-effect details available",
+                "No warning details available",
+                "No administration details available",
+                "No information available",
+                "Consult product leaflet or a clinician",
+                "No detailed side effect information available",
+                "No detailed warning information available",
+                "No detailed administration information available",
+                "No AI summary available"
+            ]
+            
+            # Required fields to check
+            required_fields = ["uses", "administration", "warnings", "side_effects"]
+            
+            # Check if drug is missing from serialized_drug_details mapping
+            found_in_serialized = False
+            for detail in serialized_drug_details_list:
+                detail_name = detail.get('name', '').lower()
+                if detail_name == drug_name_lower or drug_name_lower in detail_name:
+                    found_in_serialized = True
+                    # Check serialized data for completeness
+                    druginfo = detail.get('druginfo', {})
+                    if isinstance(druginfo, dict):
+                        # Check each required field
+                        for field in required_fields:
+                            # Try druginfo nested structure first
+                            field_value = druginfo.get(field, None)
+                            # If not in druginfo, try top-level
+                            if field_value is None:
+                                field_value = detail.get(field, None)
+                            
+                            # Check if field is missing
+                            if is_missing(field_value):
+                                return True
+                            
+                            # Also check for fallback strings in the value
+                            field_value_str = str(field_value).strip().lower()
+                            for fallback in fallback_strings:
+                                if fallback.lower() in field_value_str:
+                                    return True
+                    else:
+                        # druginfo is not a dict, check top-level fields
+                        for field in required_fields:
+                            field_value = detail.get(field, None)
+                            if is_missing(field_value):
+                                return True
+                    break
+            
+            if not found_in_serialized:
+                return True
+            
+            # Check DrugInfo model directly
+            try:
+                details = drug.druginfo
+            except Exception:
+                # DrugInfo doesn't exist for this drug
+                return True
+            
+            # Check each required field from the model
+            for field in required_fields:
+                # Get field value (handle case where field might not exist in model)
+                field_value = getattr(details, field, None)
+                
+                # Check if field is missing
+                if is_missing(field_value):
+                    return True
+                
+                # Also check for fallback strings in the value
+                field_value_str = str(field_value).strip().lower()
+                for fallback in fallback_strings:
+                    if fallback.lower() in field_value_str:
+                        return True
+            
+            return False
+        
         # Check if we need synthesis (empty interactions or missing pairs)
         all_drug_names_for_synthesis = list(generic_names_to_check)
         synthesized_count = 0
@@ -2087,8 +2548,95 @@ class ScanAndCheckView(APIView):
                 pair = tuple(sorted([inter.get('drug_1', ''), inter.get('drug_2', '')]))
                 existing_pairs.add(pair)
             
-            # Synthesize if interactions list is empty OR missing pairs
-            if len(local_interactions) == 0 or len(existing_pairs) < total_pairs:
+            missing_interactions_count = total_pairs - len(existing_pairs)
+            
+            # --- SAFEMED PATCH START ---
+            # Determine if AI synthesis is required
+            need_ai = False
+            
+            # If SleepAid is detected, ALWAYS force AI
+            normalized_drug_names = [name.lower().strip() for name in all_drug_names_for_synthesis]
+            if "sleepaid" in normalized_drug_names or any("sleepaid" in name.lower() for name in all_drug_names_for_synthesis):
+                need_ai = True
+                logger.info("SleepAid detected - forcing AI")
+            
+            # If DB has no interactions → force AI
+            if db_interactions_count == 0:
+                need_ai = True
+                logger.info("No DB interactions found - forcing AI")
+            
+            # Required fields for a drug to be considered "complete"
+            required_fields = ["uses", "administration", "warnings", "side_effects"]
+            
+            # If any drug is missing any detail, force AI
+            for drug in unique_drug_objects:
+                # --- SAFEMED PATCH START ---
+                # Skip check for Valerin/Sleep Aid (Valerin) - use static mapping
+                drug_name_lower = drug.name.lower()
+                valerin_variants = ["valerin", "sleep aid (valerin)", "sleep aid valerin"]
+                if any(variant in drug_name_lower for variant in valerin_variants):
+                    logger.info("[INFO] Using static mapping for Valerin → Sleep Aid")
+                    continue  # Skip this drug - has static mapping
+                # --- SAFEMED PATCH END ---
+                
+                try:
+                    druginfo = drug.druginfo
+                    for field in required_fields:
+                        field_value = getattr(druginfo, field, None)
+                        if not field_value or (isinstance(field_value, str) and not field_value.strip()):
+                            need_ai = True
+                            logger.info(f"Drug {drug.name} missing {field} - forcing AI")
+                            break
+                except Exception:
+                    # DrugInfo doesn't exist - force AI
+                    need_ai = True
+                    logger.info(f"Drug {drug.name} has no DrugInfo - forcing AI")
+                    break
+                if need_ai:
+                    break
+            
+            # Also check serialized drug details
+            if not need_ai:
+                for detail in serialized_drug_details:
+                    # --- SAFEMED PATCH START ---
+                    # Skip check for Valerin/Sleep Aid (Valerin) - use static mapping
+                    detail_name_lower = detail.get('name', '').lower()
+                    valerin_variants = ["valerin", "sleep aid (valerin)", "sleep aid valerin"]
+                    if any(variant in detail_name_lower for variant in valerin_variants):
+                        logger.info("[INFO] Using static mapping for Valerin → Sleep Aid")
+                        continue  # Skip this drug - has static mapping
+                    # --- SAFEMED PATCH END ---
+                    
+                    druginfo = detail.get('druginfo', {})
+                    for field in required_fields:
+                        field_value = None
+                        if isinstance(druginfo, dict):
+                            field_value = druginfo.get(field, None)
+                        if field_value is None:
+                            field_value = detail.get(field, None)
+                        if not field_value or (isinstance(field_value, str) and not field_value.strip()):
+                            need_ai = True
+                            logger.info(f"Drug {detail.get('name', 'Unknown')} missing {field} in serialized data - forcing AI")
+                            break
+                    if need_ai:
+                        break
+            
+            # Also, if AI previously returned empty list, treat as missing
+            if local_interactions is None or local_interactions == []:
+                need_ai = True
+                logger.info("Interactions list is empty - forcing AI")
+            
+            # AI must run if ANY DB interaction has severity but missing description
+            if interactions_missing_description:
+                need_ai = True
+                logger.info("DB interaction(s) have severity but missing description - forcing AI")
+            
+            # Force AI synthesis if needed OR if pairs are missing
+            force_ai = need_ai or missing_interactions_count > 0
+            # --- SAFEMED PATCH END ---
+            
+            # final decision
+            if force_ai:
                 synthesized = synthesize_interactions_from_drug_texts(
                     drug_info_map, 
                     all_drug_names_for_synthesis, 
@@ -2125,9 +2673,48 @@ class ScanAndCheckView(APIView):
                 logger.info(f"persisted_interactions_count: {persisted_count}")
                 
                 # Merge synthesized interactions (all of them, regardless of confidence)
-                local_interactions.extend(synthesized)
+                # But preserve DB severity if interaction already exists with severity but missing description
+                synthesized_dict = {}
+                for synth_inter in synthesized:
+                    pair_key = tuple(sorted([synth_inter.get('drug_1', ''), synth_inter.get('drug_2', '')]))
+                    synthesized_dict[pair_key] = synth_inter
+                
+                # Update existing interactions that need descriptions filled in
+                for i, existing_inter in enumerate(local_interactions):
+                    pair_key = tuple(sorted([existing_inter.get('drug_1', ''), existing_inter.get('drug_2', '')]))
+                    if pair_key in synthesized_dict:
+                        # Preserve DB severity if it exists
+                        existing_severity = existing_inter.get('severity', '') or existing_inter.get('interaction_level', '')
+                        if existing_severity:
+                            synthesized_dict[pair_key]['severity'] = existing_severity
+                            # Also update interaction_level if it exists
+                            if 'interaction_level' in existing_inter:
+                                synthesized_dict[pair_key]['interaction_level'] = existing_inter['interaction_level']
+                        # Remove from local_interactions since we'll add the updated one
+                        local_interactions[i] = None
+                
+                # Remove None entries and add synthesized interactions
+                local_interactions = [inter for inter in local_interactions if inter is not None]
+                local_interactions.extend(synthesized_dict.values())
+                
+                # --- SAFEMED PATCH START ---
+                # If AI returns empty, fall back to "No interaction found"
+                if not local_interactions or local_interactions == []:
+                    # Generate fallback interactions for all pairs
+                    from itertools import combinations
+                    if len(all_drug_names_for_synthesis) >= 2:
+                        for drug_a, drug_b in combinations(all_drug_names_for_synthesis, 2):
+                            local_interactions.append({
+                                "drug_1": drug_a,
+                                "drug_2": drug_b,
+                                "severity": "NONE",
+                                "interaction_level": "NONE",
+                                "description": "No harmful interactions are known between these drugs."
+                            })
+                        logger.info(f"Added fallback interactions for {len(local_interactions)} pairs")
+                # --- SAFEMED PATCH END ---
             else:
-                logger.info("All drug pairs have interactions, skipping synthesis")
+                logger.info("All drug pairs have interactions AND all details exist, skipping synthesis")
         
         # Normalize interaction severity to interaction_level and compute overall level
         levels_order = ["NONE", "LOW", "MODERATE", "HIGH"]
@@ -2199,7 +2786,219 @@ class ScanAndCheckView(APIView):
         
         payload["interactions"] = normalized_interactions
         
-        # 4. Generate Summary (NEW VERSION - replaces AI summary)
+        # 4. Check if AI needs to run (for missing drug details or missing interactions)
+        need_ai = False
+        
+        # Helper function to check if a value is missing (same as above)
+        def is_missing_value(value):
+            """Check if a field value is considered missing."""
+            if value is None:
+                return True
+            value_str = str(value).strip()
+            if not value_str:
+                return True
+            placeholder_values = ["n/a", "unknown", "none", "not available"]
+            if value_str.lower() in placeholder_values:
+                return True
+            return False
+        
+        # Check if any drug is missing details (check ALL drugs, don't stop at first)
+        if not serialized_drug_details or len(serialized_drug_details) == 0:
+            need_ai = True
+            logger.info("No drug details found - need AI")
+        else:
+            # Required fields to check
+            required_fields = ["uses", "administration", "warnings", "side_effects"]
+            
+            # Check ALL drugs in serialized_drug_details
+            for drug_detail in serialized_drug_details:
+                # --- SAFEMED PATCH START ---
+                # Skip check for Valerin/Sleep Aid (Valerin) - use static mapping
+                detail_name_lower = drug_detail.get('name', '').lower()
+                valerin_variants = ["valerin", "sleep aid (valerin)", "sleep aid valerin"]
+                if any(variant in detail_name_lower for variant in valerin_variants):
+                    logger.info("[INFO] Using static mapping for Valerin → Sleep Aid")
+                    continue  # Skip this drug - has static mapping
+                # --- SAFEMED PATCH END ---
+                
+                druginfo = drug_detail.get('druginfo', {})
+                
+                # Check each required field
+                for field in required_fields:
+                    field_value = None
+                    
+                    # Try druginfo nested structure first
+                    if isinstance(druginfo, dict):
+                        field_value = druginfo.get(field, None)
+                    
+                    # If not in druginfo, try top-level
+                    if field_value is None:
+                        field_value = drug_detail.get(field, None)
+                    
+                    # Check if field is missing
+                    if is_missing_value(field_value):
+                        need_ai = True
+                        logger.info(f"Drug {drug_detail.get('name', 'Unknown')} missing {field} - need AI")
+                        # Don't break - continue checking all fields and all drugs to log all missing ones
+        
+        # Check if any interaction has severity but missing description
+        if not need_ai:
+            for inter in normalized_interactions:
+                description = inter.get('description', '').strip()
+                severity = inter.get('severity', '') or inter.get('interaction_level', '')
+                # If interaction has severity but no description, need AI to fill it
+                if severity and not description:
+                    need_ai = True
+                    logger.info(f"Interaction {inter.get('drug_1')} + {inter.get('drug_2')} has severity but missing description - need AI")
+                    break
+        
+        # Check if any interaction pair is missing (only if we have 2+ drugs)
+        if len(all_drug_names_for_synthesis) >= 2 and not need_ai:
+            from itertools import combinations
+            total_pairs = len(list(combinations(all_drug_names_for_synthesis, 2)))
+            existing_pairs = set()
+            for inter in normalized_interactions:
+                pair = tuple(sorted([inter.get('drug_1', ''), inter.get('drug_2', '')]))
+                existing_pairs.add(pair)
+            
+            if len(existing_pairs) < total_pairs:
+                need_ai = True
+                logger.info(f"Missing interactions - need AI (found {len(existing_pairs)}/{total_pairs} pairs)")
+        
+        # Call AI if needed
+        if need_ai:
+            logger.info("Calling AI to fill missing drug details and/or interactions")
+            # Build brand_map for AI
+            brand_map = {}
+            for name in drug_names:
+                name_lower = name.lower()
+                try:
+                    local_brand_obj = LocalBrand.objects.get(brand_name__iexact=name_lower)
+                    brand_map[name] = local_brand_obj.generic_names
+                except LocalBrand.DoesNotExist:
+                    pass
+            
+            ai_result = self._generate_ai_summary(
+                interactions=normalized_interactions,
+                drug_details=serialized_drug_details,
+                found_drugs=payload["found_drug_names"],
+                brand_map=brand_map if brand_map else None,
+                user=user
+            )
+            
+            # Update drug_details from AI result
+            if isinstance(ai_result, dict) and 'drug_details' in ai_result:
+                serialized_drug_details = ai_result['drug_details']
+                payload["drug_details"] = serialized_drug_details
+            
+            # Update interactions if AI found new ones (though synthesis should have covered this)
+            # The AI summary is handled separately below
+            
+            # ---- FORCE SAVE AI-GENERATED DRUG DETAILS ----
+            # Note: Drug and DrugInfo are already imported at the top of the file
+            from django.db import transaction
+            
+            with transaction.atomic():
+                if isinstance(ai_result, dict) and 'drug_details' in ai_result:
+                    ai_details = ai_result.get("drug_details", [])
+                    if isinstance(ai_details, list):
+                        # Convert list format to dict format for processing
+                        ai_details_dict = {}
+                        for detail in ai_details:
+                            drug_name = detail.get("name", "")
+                            if drug_name:
+                                ai_details_dict[drug_name] = detail
+                    else:
+                        ai_details_dict = ai_details if isinstance(ai_details, dict) else {}
+                    
+                    # --- SAFEMED PERSISTENCE HELPERS START ---
+                    def normalize_field(value):
+                        if value is None:
+                            return ""
+                        if isinstance(value, list):
+                            return "\n".join(str(v).strip() for v in value if v and str(v).strip())
+                        if isinstance(value, dict):
+                            # simple key: value lines
+                            return "\n".join(f"{k}: {v}" for k, v in value.items())
+                        return str(value).strip()
+
+                    def get_or_create_drug_by_name(name):
+                        # case-insensitive lookup; return Drug instance
+                        if not name:
+                            return None
+                        name_clean = name.strip()
+                        drug = Drug.objects.filter(name__iexact=name_clean).first()
+                        if not drug:
+                            drug = Drug.objects.create(name=name_clean)
+                        return drug
+
+                    # ai_details expected to be a dict keyed by canonical drug name
+                    for drug_name, details in ai_details_dict.items():
+                        try:
+                            drug_obj = get_or_create_drug_by_name(drug_name)
+                            if not drug_obj:
+                                logger.error(f"Could not create/find drug: {drug_name}")
+                                continue
+
+                            # Ensure DrugInfo exists or create/update it
+                            info_defaults = {
+                                "administration": normalize_field(details.get("administration")),
+                                "side_effects": normalize_field(details.get("side_effects")),
+                                "warnings": normalize_field(details.get("warnings")),
+                                "uses": normalize_field(details.get("uses"))   # NEW field
+                            }
+
+                            info_obj, created = DrugInfo.objects.update_or_create(
+                                drug=drug_obj,
+                                defaults={ **info_defaults, "auto_filled": True }
+                            )
+                            logger.info(f"Saved drug details to DB: {drug_obj.name} (created={created})")
+
+                        except Exception as e:
+                            logger.exception(f"Failed saving drug details for {drug_name}: {e}")
+
+                    # Save interactions (ensure case-insensitive drug lookups)
+                    ai_interactions = []
+                    if isinstance(ai_result, dict) and 'interactions' in ai_result:
+                        ai_interactions = ai_result.get("interactions", [])
+                    
+                    # Combine AI interactions with normalized_interactions (includes synthesized interactions)
+                    interactions_to_save = ai_interactions if ai_interactions else normalized_interactions
+                    if interactions_to_save:
+                        for inter in interactions_to_save:
+                            try:
+                                name1 = inter.get("drug1") or inter.get("drug_1")
+                                name2 = inter.get("drug2") or inter.get("drug_2")
+                                if not name1 or not name2:
+                                    logger.warning("Skipping interaction save due to missing names.")
+                                    continue
+
+                                d1 = Drug.objects.filter(name__iexact=name1.strip()).first()
+                                d2 = Drug.objects.filter(name__iexact=name2.strip()).first()
+                                if not d1 or not d2:
+                                    logger.warning(f"Skipping interaction save: missing drug object for {name1} or {name2}")
+                                    continue
+
+                                # Always store interaction with a stable ordering to respect unique_together
+                                pair = sorted([d1.id, d2.id])
+                                drug_a = d1 if d1.id <= d2.id else d2
+                                drug_b = d2 if d2.id >= d1.id else d1
+
+                                obj, created = Interaction.objects.update_or_create(
+                                    drug_a=drug_a,
+                                    drug_b=drug_b,
+                                    defaults={
+                                        "description": inter.get("description", "") or "",
+                                        "severity": inter.get("severity", "UNKNOWN").upper()[:10]
+                                    }
+                                )
+                                logger.info(f"Saved interaction: {d1.name} ↔ {d2.name} (created={created}, severity={obj.severity})")
+
+                            except Exception as e:
+                                logger.exception(f"Failed saving interaction for pair {inter}: {e}")
+                    # --- SAFEMED PERSISTENCE HELPERS END ---
+        
+        # 5. Generate Summary (NEW VERSION - replaces AI summary)
         detected_drugs = payload["found_drug_names"]
         interaction_results = normalized_interactions
         
