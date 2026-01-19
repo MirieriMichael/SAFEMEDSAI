@@ -113,7 +113,13 @@ Your app should now be running at `http://localhost:3000`!
 
 ## 📄 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+## 📄 License
+**Copyright © 2026 Michael Mirieri. All Rights Reserved.**
+
+This project is proprietary and confidential. Unauthorized copying, distribution, or modification 
+of this file or project, via any medium, is strictly prohibited.
+
+Permission is granted for academic evaluation and recruitment viewing only.
 
 ```
 
