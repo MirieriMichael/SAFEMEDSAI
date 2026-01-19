@@ -1,0 +1,153 @@
+/* frontend/src/HelpPage.css */
+
+.help-page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  color: #e0e0e0;
+}
+
+.help-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.help-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.help-header p {
+  color: #9ca3af;
+  font-size: 1.1rem;
+}
+
+/* --- How To Section --- */
+.how-to-section {
+  margin-bottom: 60px;
+}
+
+.how-to-section h2, .faq-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  border-left: 4px solid #1193d4;
+  padding-left: 15px;
+  color: #fff;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.step-card {
+  background-color: #1f2937;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid #374151;
+  position: relative;
+}
+
+.step-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #1193d4;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.step-card h3 {
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.step-card p {
+  color: #9ca3af;
+  line-height: 1.6;
+}
+
+/* --- FAQ Section --- */
+.faq-item {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  overflow: hidden;
+}
+
+.faq-item:hover {
+  background-color: #2d3748;
+}
+
+.faq-question {
+  padding: 20px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #e0e0e0;
+}
+
+.faq-answer {
+  padding: 0 20px 20px 20px;
+  color: #9ca3af;
+  line-height: 1.6;
+  border-top: 1px solid #374151;
+  padding-top: 15px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* Add this to the bottom of frontend/src/HelpPage.css */
+
+/* --- Contact Section --- */
+.contact-section {
+  margin-top: 60px;
+  text-align: center;
+}
+
+.contact-card {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px solid #374151;
+  display: inline-block;
+  min-width: 60%;
+}
+
+.contact-card h2 {
+  border-left: none;
+  padding-left: 0;
+  margin-bottom: 15px;
+}
+
+.contact-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #1193d4;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 20px;
+  transition: background-color 0.2s;
+}
+
+.contact-button:hover {
+  background-color: #0e7ab5;
+}

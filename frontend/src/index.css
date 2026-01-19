@@ -1,0 +1,26 @@
+/* frontend/src/index.css */
+:root {
+  --background-color: #1a1a2e;
+  --card-background: #16213e;
+  --primary-accent: #0f3460;
+  --secondary-accent: #e94560;
+  --text-color: #e0e0e0;
+  --text-light: #a8a8a8;
+  --border-color-major: #e53935; /* Red */
+  --border-color-moderate: #fdd835; /* Yellow */
+  --border-color-minor: #43a047; /* Green */
+  --border-color-info: #1e88e5; /* Blue */
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+* {
+  box-sizing: border-box;
+}

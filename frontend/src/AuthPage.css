@@ -1,0 +1,111 @@
+/* frontend/src/AuthPage.css */
+
+.auth-container {
+  max-width: 400px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background-color: #282c34; /* Dark background for the form */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.auth-form h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  background-color: #3a3f47;
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: #ffffff;
+  box-sizing: border-box; /* Important for padding to work right */
+}
+
+.auth-button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(90deg, #1e90ff, #00bfff);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.auth-button:hover {
+  opacity: 0.9;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #b0b0b0;
+}
+
+.auth-switch a {
+  color: #1e90ff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #ff4d4d;
+  background-color: rgba(255, 77, 77, 0.1);
+  border: 1px solid #ff4d4d;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+/* frontend/src/AuthPage.css - Additions */
+
+.password-criteria {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 20px 0;
+  font-size: 0.85rem;
+}
+
+.password-criteria li {
+  margin-bottom: 4px;
+  color: #888; /* Default gray */
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.password-criteria li.valid {
+  color: #4caf50; /* Green when met */
+}
+
+.password-criteria li::before {
+  content: '○'; /* Empty circle */
+  font-weight: bold;
+}
+
+.password-criteria li.valid::before {
+  content: '✓'; /* Checkmark */
+}
