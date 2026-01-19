@@ -44,3 +44,5 @@ def extract_drugs_with_bert(ocr_text):
         logging.error(f"NER Model Inference Failed: {e}")
         return []
 
+
+

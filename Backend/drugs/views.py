@@ -2068,7 +2068,17 @@ class ScanAndCheckView(APIView):
 
                         if d_obj:
                             try:
-                                di, created = DrugInfo.objects.get_or_create(drug=d_obj)
+                                # Use select_for_update to prevent race conditions
+                                di, created = DrugInfo.objects.select_for_update().get_or_create(
+                                    drug=d_obj,
+                                    defaults={
+                                        'administration': '',
+                                        'side_effects': '',
+                                        'warnings': '',
+                                        'uses': '',
+                                        'auto_filled': False
+                                    }
+                                )
                                 
                                 def get_val(src, keys):
                                     for k in keys:
@@ -2079,28 +2089,47 @@ class ScanAndCheckView(APIView):
                                 new_se = get_val(info, ["side_effects", "sideEffects", "SideEffects", "side-effects"])
                                 new_adm = get_val(info, ["administration", "Administration", "dosage", "usage"])
                                 new_warn = get_val(info, ["warnings", "Warnings", "precautions"])
+                                new_uses = get_val(info, ["uses", "Uses", "use", "indications"])
                                 
                                 # Expand abbreviations in drug details
                                 if new_se: new_se = expand_abbreviations(new_se)
                                 if new_adm: new_adm = expand_abbreviations(new_adm)
                                 if new_warn: new_warn = expand_abbreviations(new_warn)
+                                if new_uses: new_uses = expand_abbreviations(new_uses)
 
-                                # Save to DB if new
-                                if not di.side_effects or getattr(di, "auto_filled", False) is False:
-                                    if new_se: di.side_effects = new_se
-                                    if new_adm: di.administration = new_adm
-                                    if new_warn: di.warnings = new_warn
+                                # Only update fields that have non-empty values (preserve existing if new is empty)
+                                updated = False
+                                if new_se and new_se.strip() and (not di.side_effects or getattr(di, "auto_filled", False) is False):
+                                    di.side_effects = new_se
+                                    updated = True
+                                if new_adm and new_adm.strip() and (not di.administration or getattr(di, "auto_filled", False) is False):
+                                    di.administration = new_adm
+                                    updated = True
+                                if new_warn and new_warn.strip() and (not di.warnings or getattr(di, "auto_filled", False) is False):
+                                    di.warnings = new_warn
+                                    updated = True
+                                if new_uses and new_uses.strip() and (not getattr(di, "uses", None) or getattr(di, "auto_filled", False) is False):
+                                    di.uses = new_uses
+                                    updated = True
+                                
+                                if updated:
                                     di.auto_filled = True
-                                    di.save()
+                                    di.save(update_fields=['administration', 'side_effects', 'warnings', 'uses', 'auto_filled'])
+                                    di.refresh_from_db()
+                                    
+                                    # Verify persistence
+                                    verified_di = DrugInfo.objects.get(drug=d_obj)
+                                    logger.info(f"Verified DrugInfo save for {d_obj.name} (ID: {d_obj.id}): uses={bool(verified_di.uses)}, admin={bool(verified_di.administration)}, warnings={bool(verified_di.warnings)}, side_effects={bool(verified_di.side_effects)}")
                                     
                                     # Update the response object immediately
                                     for d_detail in drug_details:
                                         d_name = d_detail.get("name", "").lower()
                                         if d_name == d_obj.name.lower() or d_obj.name.lower() in d_name:
                                             d_detail["druginfo"] = {
-                                                "side_effects": expand_abbreviations(di.side_effects or ""),
-                                                "administration": expand_abbreviations(di.administration or ""),
-                                                "warnings": expand_abbreviations(di.warnings or "")
+                                                "uses": expand_abbreviations(getattr(verified_di, "uses", "") or ""),
+                                                "side_effects": expand_abbreviations(verified_di.side_effects or ""),
+                                                "administration": expand_abbreviations(verified_di.administration or ""),
+                                                "warnings": expand_abbreviations(verified_di.warnings or "")
                                             }
                             except Exception as e:
                                 logger.error("DB Save Error: %s", e)
@@ -2924,11 +2953,14 @@ class ScanAndCheckView(APIView):
 
                     def get_or_create_drug_by_name(name):
                         # case-insensitive lookup; return Drug instance
+                        # Use select_for_update to prevent race conditions
                         if not name:
                             return None
                         name_clean = name.strip()
-                        drug = Drug.objects.filter(name__iexact=name_clean).first()
+                        # Lock the row to prevent concurrent modifications
+                        drug = Drug.objects.select_for_update().filter(name__iexact=name_clean).first()
                         if not drug:
+                            # Create with the exact name provided (normalized)
                             drug = Drug.objects.create(name=name_clean)
                         return drug
 
@@ -2940,19 +2972,72 @@ class ScanAndCheckView(APIView):
                                 logger.error(f"Could not create/find drug: {drug_name}")
                                 continue
 
-                            # Ensure DrugInfo exists or create/update it
-                            info_defaults = {
-                                "administration": normalize_field(details.get("administration")),
-                                "side_effects": normalize_field(details.get("side_effects")),
-                                "warnings": normalize_field(details.get("warnings")),
-                                "uses": normalize_field(details.get("uses"))   # NEW field
-                            }
-
-                            info_obj, created = DrugInfo.objects.update_or_create(
+                            # Use select_for_update to lock the DrugInfo row during save
+                            # This prevents race conditions and ensures we're working with the latest data
+                            info_obj, created = DrugInfo.objects.select_for_update().get_or_create(
                                 drug=drug_obj,
-                                defaults={ **info_defaults, "auto_filled": True }
+                                defaults={
+                                    'administration': '',
+                                    'side_effects': '',
+                                    'warnings': '',
+                                    'uses': '',
+                                    'auto_filled': False
+                                }
                             )
-                            logger.info(f"Saved drug details to DB: {drug_obj.name} (created={created})")
+                            
+                            # Normalize new values
+                            new_administration = normalize_field(details.get("administration"))
+                            new_side_effects = normalize_field(details.get("side_effects"))
+                            new_warnings = normalize_field(details.get("warnings"))
+                            new_uses = normalize_field(details.get("uses"))
+                            
+                            # Track if any field was updated
+                            updated = False
+                            
+                            # Only update fields that have non-empty values (preserve existing if new is empty)
+                            if new_administration and new_administration.strip():
+                                info_obj.administration = new_administration
+                                updated = True
+                            if new_side_effects and new_side_effects.strip():
+                                info_obj.side_effects = new_side_effects
+                                updated = True
+                            if new_warnings and new_warnings.strip():
+                                info_obj.warnings = new_warnings
+                                updated = True
+                            if new_uses and new_uses.strip():
+                                info_obj.uses = new_uses
+                                updated = True
+                            
+                            # Always set auto_filled to True when AI generates content
+                            if updated or not info_obj.auto_filled:
+                                info_obj.auto_filled = True
+                                updated = True
+                            
+                            # Only save if something changed
+                            if updated:
+                                info_obj.save(update_fields=[
+                                    'administration', 'side_effects', 'warnings', 'uses', 'auto_filled'
+                                ])
+                                
+                                # Force DB commit by refreshing from DB
+                                info_obj.refresh_from_db()
+                                
+                                # Verify persistence by re-querying from DB
+                                verified_obj = DrugInfo.objects.get(drug=drug_obj)
+                                
+                                # Debug logging to show exact saved values
+                                logger.warning("FINAL DrugInfo stored in DB for %s (ID: %d) → %s", 
+                                    drug_obj.name, drug_obj.id, {
+                                        "uses": verified_obj.uses[:100] + "..." if verified_obj.uses and len(verified_obj.uses) > 100 else (verified_obj.uses or "(empty)"),
+                                        "administration": verified_obj.administration[:100] + "..." if verified_obj.administration and len(verified_obj.administration) > 100 else (verified_obj.administration or "(empty)"),
+                                        "warnings": verified_obj.warnings[:100] + "..." if verified_obj.warnings and len(verified_obj.warnings) > 100 else (verified_obj.warnings or "(empty)"),
+                                        "side_effects": verified_obj.side_effects[:100] + "..." if verified_obj.side_effects and len(verified_obj.side_effects) > 100 else (verified_obj.side_effects or "(empty)"),
+                                        "auto_filled": verified_obj.auto_filled
+                                    })
+                                
+                                logger.info(f"Saved drug details to DB: {drug_obj.name} (ID: {drug_obj.id}, created={created}, updated={updated})")
+                            else:
+                                logger.info(f"No changes to save for {drug_obj.name} (ID: {drug_obj.id})")
 
                         except Exception as e:
                             logger.exception(f"Failed saving drug details for {drug_name}: {e}")

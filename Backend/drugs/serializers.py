@@ -8,7 +8,7 @@ from .models import Drug, Interaction, DrugInfo, ScanHistory,Profile, Notificati
 class DrugInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = DrugInfo
-        fields = ['administration', 'side_effects', 'warnings']
+        fields = ['administration', 'side_effects', 'warnings', 'uses']
 
 class DrugSerializer(serializers.ModelSerializer):
     """UPDATED to include the nested DrugInfo."""

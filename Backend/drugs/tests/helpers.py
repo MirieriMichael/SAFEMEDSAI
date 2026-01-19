@@ -33,3 +33,5 @@ def normalize(text):
     words = [w[:-1] if w.endswith('s') else w for w in words]
     return words
 
+
+

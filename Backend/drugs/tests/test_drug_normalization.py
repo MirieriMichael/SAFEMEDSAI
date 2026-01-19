@@ -118,3 +118,5 @@ class DrugNormalizationTests(TestCase):
         self.assertEqual(normalized["druginfo"]["warnings"], "")
         self.assertIsInstance(normalized["druginfo"]["administration"], str)
 
+
+
