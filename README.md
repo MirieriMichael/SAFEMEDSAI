@@ -111,7 +111,6 @@ Your app should now be running at `http://localhost:3000`!
 
 ---
 
-## 📄 License
 
 ## 📄 License
 **Copyright © 2026 Michael Mirieri. All Rights Reserved.**
@@ -124,6 +123,5 @@ Permission is granted for academic evaluation and recruitment viewing only.
 ```
 
 
-This makes the repo look 10x more professional immediately.
 
 ```
